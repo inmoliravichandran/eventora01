@@ -147,7 +147,7 @@ async function handleRegister(event) {
         if (result.success) {
             showNotification('Registration successful! Please login.', 'success');
             setTimeout(() => {
-                window.location.href = 'login.html';
+                window.location.href = 'login.php';
             }, 1500);
         } else {
             showNotification(result.message, 'error');
@@ -204,13 +204,13 @@ async function handleLogin(event) {
             showNotification(result.message, 'success');
             
             // Check for redirect (default to services page)
-            const redirect = localStorage.getItem('redirectAfterLogin') || 'services.html';
+            const redirect = localStorage.getItem('redirectAfterLogin') || 'services.php';
             localStorage.removeItem('redirectAfterLogin');
 
             setTimeout(() => {
                 // If server returned an admin role, send to admin dashboard
                 if (result.user && result.user.role === 'admin') {
-                    window.location.href = 'admin-dashboard.html';
+                    window.location.href = 'admin-dashboard.php';
                 } else {
                     window.location.href = redirect;
                 }
@@ -244,7 +244,7 @@ async function logout() {
     
     showNotification('Logged out successfully', 'success');
     setTimeout(() => {
-        window.location.href = 'index.html';
+        window.location.href = 'index.php';
     }, 1000);
 }
 
@@ -255,11 +255,11 @@ function getRedirectUrl() {
 
 function redirectToLoginWithReturn(path) {
     localStorage.setItem('redirectAfterLogin', path);
-    window.location.href = `login.html?redirect=${encodeURIComponent(path)}`;
+    window.location.href = `login.php?redirect=${encodeURIComponent(path)}`;
 }
 
 function protectGuestPage() {
-    const protectedPages = ['services.html', 'cart.html', 'checkout.html'];
+    const protectedPages = ['services.php', 'cart.php', 'checkout.php'];
     const currentPage = window.location.pathname.split('/').pop();
 
     if (!isAuthenticated() && protectedPages.includes(currentPage)) {
@@ -274,14 +274,14 @@ function enforceProtectedNavLinks() {
     }
 
     const guardedLinks = [
-        { selector: 'a[href="services.html"]', redirect: 'services.html' },
-        { selector: 'a[href="cart.html"]', redirect: 'cart.html' },
-        { selector: 'a[href="checkout.html"]', redirect: 'checkout.html' }
+        { selector: 'a[href="services.php"]', redirect: 'services.php' },
+        { selector: 'a[href="cart.php"]', redirect: 'cart.php' },
+        { selector: 'a[href="checkout.php"]', redirect: 'checkout.php' }
     ];
 
     guardedLinks.forEach(linkInfo => {
         document.querySelectorAll(linkInfo.selector).forEach(link => {
-            link.href = `login.html?redirect=${encodeURIComponent(linkInfo.redirect)}`;
+            link.href = `login.php?redirect=${encodeURIComponent(linkInfo.redirect)}`;
             link.addEventListener('click', (event) => {
                 event.preventDefault();
                 redirectToLoginWithReturn(linkInfo.redirect);
@@ -298,9 +298,9 @@ function checkAuth() {
     // Update navigation
     const navLinks = document.querySelector('.nav-links');
     if (navLinks) {
-        const loginLink = navLinks.querySelector('a[href="login.html"]');
-        const registerLink = navLinks.querySelector('a[href="register.html"]');
-        const cartLink = navLinks.querySelector('a[href="cart.html"]');
+        const loginLink = navLinks.querySelector('a[href="login.php"]');
+        const registerLink = navLinks.querySelector('a[href="register.php"]');
+        const cartLink = navLinks.querySelector('a[href="cart.php"]');
         
         if (isAuth && user) {
             if (loginLink) {
@@ -322,12 +322,12 @@ function checkAuth() {
         } else {
             if (loginLink) {
                 loginLink.innerHTML = `<i class="fas fa-sign-in-alt"></i> Login`;
-                loginLink.href = 'login.html';
+                loginLink.href = 'login.php';
                 loginLink.onclick = null;
             }
             if (registerLink) {
                 registerLink.innerHTML = `<i class="fas fa-user-plus"></i> Register`;
-                registerLink.href = 'register.html';
+                registerLink.href = 'register.php';
                 registerLink.onclick = null;
             }
         }
@@ -371,16 +371,16 @@ function showUserMenu() {
             <div style="font-weight: 600;">${user.name || user.email}</div>
             <div style="font-size: 0.8rem; opacity: 0.9;">${user.email || ''}</div>
         </div>
-        <a href="my-bookings.html" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;">
+        <a href="profile.php" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;">
             <i class="fas fa-calendar-check" style="color: var(--accent-gold); width: 20px;"></i> My Bookings
         </a>
-        <a href="profile.html" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;">
+        <a href="profile.php" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;">
             <i class="fas fa-user" style="color: var(--accent-gold); width: 20px;"></i> Profile Settings
         </a>
-        <a href="wishlist.html" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;">
+        <a href="profile.php" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;">
             <i class="fas fa-heart" style="color: var(--accent-gold); width: 20px;"></i> Wishlist
         </a>
-        ${isAdmin ? `<a href="admin-dashboard.html" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;"><i class="fas fa-tachometer-alt" style="color: var(--accent-gold); width: 20px;"></i> Admin Dashboard</a>` : ''}
+        ${isAdmin ? `<a href="admin-dashboard.php" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: var(--text-dark); text-decoration: none; transition: background 0.3s;"><i class="fas fa-tachometer-alt" style="color: var(--accent-gold); width: 20px;"></i> Admin Dashboard</a>` : ''}
         <div style="border-top: 1px solid var(--border-light);"></div>
         <a href="#" onclick="logout(); return false;" style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; color: #ef4444; text-decoration: none; transition: background 0.3s;">
             <i class="fas fa-sign-out-alt" style="width: 20px;"></i> Logout
@@ -512,7 +512,7 @@ function moveToCart(itemId) {
 
 // Update cart count display
 function updateCartCount() {
-    const cartLink = document.querySelector('a[href="cart.html"]');
+    const cartLink = document.querySelector('a[href="cart.php"]');
     if (!cartLink) return;
     
     const itemCount = Object.values(cartItems).reduce((sum, item) => sum + item.quantity, 0);
@@ -561,7 +561,7 @@ function renderCart() {
                 <i class="fas fa-shopping-cart"></i>
                 <h3>Your cart is empty</h3>
                 <p>Looks like you haven't added any services to your cart yet.</p>
-                <a href="services.html" class="btn-browse">
+                <a href="services.php" class="btn-browse">
                     <i class="fas fa-search"></i> Browse Services
                 </a>
             </div>
@@ -740,13 +740,13 @@ function proceedToCheckout() {
     }
     
     if (!isAuthenticated()) {
-        localStorage.setItem('redirectAfterLogin', 'checkout.html');
+        localStorage.setItem('redirectAfterLogin', 'checkout.php');
         showNotification('Please login to continue', 'info');
         setTimeout(() => {
-            window.location.href = 'login.html';
+            window.location.href = 'login.php';
         }, 1500);
     } else {
-        window.location.href = 'checkout.html';
+        window.location.href = 'checkout.php';
     }
 }
 
@@ -826,7 +826,7 @@ function placeOrder() {
                         <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 12px; margin: 2rem auto; max-width: 300px;">
                             <p><strong>Order Number:</strong> #EVT-${Math.floor(100000 + Math.random() * 900000)}</p>
                         </div>
-                        <a href="index.html" class="btn">Return to Home</a>
+                        <a href="index.php" class="btn">Return to Home</a>
                     </div>
                 </div>
             `;
