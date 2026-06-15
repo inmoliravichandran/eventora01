@@ -964,22 +964,24 @@ try {
                         <div class="card-image">
                             <img src="<?php echo htmlspecialchars($service['image_url'] ?: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400'); ?>" alt="<?php echo htmlspecialchars($service['name']); ?>">
                         </div>
-                        <i class="fas <?php 
-                            switch ($service['category']) {
-                                case 'wedding': echo 'fa-ring'; break;
-                                case 'birthday': echo 'fa-birthday-cake'; break;
-                                case 'corporate': echo 'fa-briefcase'; break;
-                                case 'photography': echo 'fa-camera'; break;
-                                case 'catering': echo 'fa-utensils'; break;
-                                case 'entertainment': echo 'fa-music'; break;
-                                case 'venue': echo 'fa-hotel'; break;
-                                default: echo 'fa-calendar-alt';
-                            }
-                        ?> service-icon"></i>
-                        <h3><?php echo htmlspecialchars($service['name']); ?></h3>
-                        <p><?php echo htmlspecialchars($service['short_description'] ?: substr($service['description'], 0, 100)); ?>...</p>
-                        <div class="price">Rs <?php echo number_format($service['price'], 0); ?></div>
-                        <a href="service-details.php?id=<?php echo $service['id']; ?>" class="btn">View Details →</a>
+                        <div class="card-content">
+                            <i class="fas <?php 
+                                switch ($service['category']) {
+                                    case 'wedding': echo 'fa-ring'; break;
+                                    case 'birthday': echo 'fa-birthday-cake'; break;
+                                    case 'corporate': echo 'fa-briefcase'; break;
+                                    case 'photography': echo 'fa-camera'; break;
+                                    case 'catering': echo 'fa-utensils'; break;
+                                    case 'entertainment': echo 'fa-music'; break;
+                                    case 'venue': echo 'fa-hotel'; break;
+                                    default: echo 'fa-calendar-alt';
+                                }
+                            ?> service-icon"></i>
+                            <h3><?php echo htmlspecialchars($service['name']); ?></h3>
+                            <p><?php echo htmlspecialchars($service['short_description'] ?: substr($service['description'], 0, 100)); ?>...</p>
+                            <div class="price">Rs <?php echo number_format($service['price'], 0); ?></div>
+                            <span class="btn">View Details →</span>
+                        </div>
                     </div>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -1040,7 +1042,7 @@ try {
         </section>
 
         <!-- Stats Section -->
-        <section class="about-section" style="background: linear-gradient(135deg, #f1f5f9, #ffffff);">
+        <section class="about-section">
             <div class="about-grid">
                 <div class="about-content">
                     <h2 class="section-title">Trusted by Thousands</h2>
