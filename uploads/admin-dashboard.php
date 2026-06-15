@@ -21,25 +21,141 @@ if (!$isAdmin) {
 
 require_once '../backend/config.php';
 
-// Handle AJAX booking status update
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
+// Handle AJAX operations
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     header('Content-Type: application/json');
-    $bookingId = intval($_POST['booking_id'] ?? 0);
-    $newStatus = $_POST['status'] ?? '';
+    $action = $_POST['action'];
     
-    $allowedStatuses = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'refunded'];
-    if ($bookingId > 0 && in_array($newStatus, $allowedStatuses)) {
+    if ($action === 'update_status') {
+        $bookingId = intval($_POST['booking_id'] ?? 0);
+        $newStatus = $_POST['status'] ?? '';
+        $allowedStatuses = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'refunded'];
+        
+        if ($bookingId > 0 && in_array($newStatus, $allowedStatuses)) {
+            try {
+                $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ?");
+                $stmt->execute([$newStatus, $bookingId]);
+                echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+            } catch (PDOException $e) {
+                echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
+        }
+        exit;
+    }
+    
+    if ($action === 'add_service') {
+        $name = $_POST['name'] ?? '';
+        $category = $_POST['category'] ?? 'other';
+        $price = floatval($_POST['price'] ?? 0);
+        $image_url = $_POST['image_url'] ?? '';
+        $short_desc = $_POST['short_description'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $is_featured = isset($_POST['is_featured']) ? 1 : 0;
+        $vendor_id = $_SESSION['user_id'] ?? 1;
+        
+        if (empty($name) || $price <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Service name and valid price are required']);
+            exit;
+        }
+        
         try {
-            $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ?");
-            $stmt->execute([$newStatus, $bookingId]);
-            echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+            $stmt = $pdo->prepare("INSERT INTO services (vendor_id, name, category, price, image_url, short_description, description, is_featured, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)");
+            $stmt->execute([$vendor_id, $name, $category, $price, $image_url, $short_desc, $description, $is_featured]);
+            echo json_encode(['success' => true, 'message' => 'Service added successfully']);
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
         }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
+        exit;
     }
-    exit;
+    
+    if ($action === 'edit_service') {
+        $serviceId = intval($_POST['service_id'] ?? 0);
+        $name = $_POST['name'] ?? '';
+        $category = $_POST['category'] ?? 'other';
+        $price = floatval($_POST['price'] ?? 0);
+        $image_url = $_POST['image_url'] ?? '';
+        $short_desc = $_POST['short_description'] ?? '';
+        $description = $_POST['description'] ?? '';
+        $is_featured = isset($_POST['is_featured']) ? 1 : 0;
+        
+        if ($serviceId <= 0 || empty($name) || $price <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
+            exit;
+        }
+        
+        try {
+            $stmt = $pdo->prepare("UPDATE services SET name = ?, category = ?, price = ?, image_url = ?, short_description = ?, description = ?, is_featured = ? WHERE id = ?");
+            $stmt->execute([$name, $category, $price, $image_url, $short_desc, $description, $is_featured, $serviceId]);
+            echo json_encode(['success' => true, 'message' => 'Service updated successfully']);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+    
+    if ($action === 'delete_service') {
+        $serviceId = intval($_POST['service_id'] ?? 0);
+        if ($serviceId <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Invalid service ID']);
+            exit;
+        }
+        
+        try {
+            $stmt = $pdo->prepare("DELETE FROM services WHERE id = ?");
+            $stmt->execute([$serviceId]);
+            echo json_encode(['success' => true, 'message' => 'Service deleted successfully']);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+    
+    if ($action === 'update_user') {
+        $userId = intval($_POST['user_id'] ?? 0);
+        $field = $_POST['field'] ?? '';
+        $value = $_POST['value'] ?? '';
+        
+        if ($userId <= 0 || !in_array($field, ['role', 'status'])) {
+            echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
+            exit;
+        }
+        
+        if ($field === 'role' && !in_array($value, ['user', 'vendor', 'admin'])) {
+            echo json_encode(['success' => false, 'message' => 'Invalid role']);
+            exit;
+        }
+        if ($field === 'status' && !in_array($value, ['active', 'inactive', 'banned'])) {
+            echo json_encode(['success' => false, 'message' => 'Invalid status']);
+            exit;
+        }
+        
+        try {
+            $stmt = $pdo->prepare("UPDATE users SET $field = ? WHERE id = ?");
+            $stmt->execute([$value, $userId]);
+            echo json_encode(['success' => true, 'message' => 'User updated successfully']);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+}
+
+// Active tab selection
+$tab = $_GET['tab'] ?? 'dashboard';
+if (!in_array($tab, ['dashboard', 'services', 'users'])) {
+    $tab = 'dashboard';
+}
+
+$pageTitle = 'Dashboard';
+$pageSubtitle = "Welcome back, Admin! Here's what's happening with your events today.";
+if ($tab === 'services') {
+    $pageTitle = 'Manage Services';
+    $pageSubtitle = "Create, edit, and update the event packages offered on your platform.";
+} elseif ($tab === 'users') {
+    $pageTitle = 'Manage Users';
+    $pageSubtitle = "View registered users, promote roles, and manage access statuses.";
 }
 
 try {
@@ -62,6 +178,12 @@ try {
     );
     $stmtAll->execute();
     $allBookings = $stmtAll->fetchAll();
+    
+    // Fetch all services
+    $allServices = $pdo->query("SELECT * FROM services ORDER BY id DESC")->fetchAll();
+    
+    // Fetch all users
+    $allUsers = $pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll();
 
 } catch (PDOException $e) {
     $usersCount = 0;
@@ -71,6 +193,8 @@ try {
     $totalRevenue = 0;
     $recentBookings = [];
     $allBookings = [];
+    $allServices = [];
+    $allUsers = [];
 }
 ?>
 <!DOCTYPE html>
@@ -728,9 +852,17 @@ try {
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <a href="admin-dashboard.php" class="nav-item active">
+                <a href="admin-dashboard.php?tab=dashboard" class="nav-item <?php echo $tab === 'dashboard' ? 'active' : ''; ?>">
                     <i class="fas fa-chart-line"></i>
                     <span>Dashboard</span>
+                </a>
+                <a href="admin-dashboard.php?tab=services" class="nav-item <?php echo $tab === 'services' ? 'active' : ''; ?>">
+                    <i class="fas fa-cogs"></i>
+                    <span>Manage Services</span>
+                </a>
+                <a href="admin-dashboard.php?tab=users" class="nav-item <?php echo $tab === 'users' ? 'active' : ''; ?>">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Manage Users</span>
                 </a>
                 <a href="services.php" class="nav-item">
                     <i class="fas fa-calendar-alt"></i>
@@ -752,8 +884,8 @@ try {
             <!-- Top Header -->
             <div class="top-header">
                 <div class="page-title">
-                    <h1>Dashboard</h1>
-                    <p>Welcome back, Admin! Here's what's happening with your events today.</p>
+                    <h1><?php echo $pageTitle; ?></h1>
+                    <p><?php echo $pageSubtitle; ?></p>
                 </div>
                 <div class="header-actions">
                     <div class="search-bar">
@@ -766,6 +898,7 @@ try {
                 </div>
             </div>
 
+            <?php if ($tab === 'dashboard'): ?>
             <!-- Stats Cards -->
             <div class="stats-grid">
                 <div class="stat-card">
@@ -931,7 +1064,7 @@ try {
                 </div>
             </div>
 
-            <!-- All Events Table -->
+            <!-- All Bookings Table -->
             <div class="card" id="all-bookings" style="margin-top: 1.5rem;">
                 <div class="card-header">
                     <h3><i class="fas fa-table-list"></i> All Bookings Log</h3>
@@ -994,6 +1127,137 @@ try {
                     </table>
                 </div>
             </div>
+            <?php endif; ?>
+
+            <?php if ($tab === 'services'): ?>
+            <!-- Manage Services View -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+                <button class="btn" onclick="openAddServiceModal()">
+                    <i class="fas fa-plus"></i> Add New Service
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list-check"></i> Platform Services List</h3>
+                </div>
+                <div class="events-table-wrapper">
+                    <table class="events-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Service Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Featured</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($allServices as $s): ?>
+                                <tr>
+                                    <td>#SRV-<?php echo $s['id']; ?></td>
+                                    <td>
+                                        <img src="<?php echo htmlspecialchars($s['image_url'] ?: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=100'); ?>" 
+                                             alt="Service Thumbnail" 
+                                             style="width: 50px; height: 35px; object-fit: cover; border-radius: var(--border-radius-sm); border: 1px solid rgba(255,255,255,0.1);">
+                                    </td>
+                                    <td><strong><?php echo htmlspecialchars($s['name']); ?></strong></td>
+                                    <td>
+                                        <span class="badge" style="background: rgba(212, 175, 55, 0.15); color: var(--gold-primary);">
+                                            <?php echo ucfirst(htmlspecialchars($s['category'] ?? 'other')); ?>
+                                        </span>
+                                    </td>
+                                    <td>Rs <?php echo number_format($s['price'], 0); ?></td>
+                                    <td>
+                                        <span class="badge" style="background: <?php echo $s['is_featured'] ? 'rgba(0, 200, 83, 0.2)' : 'rgba(255, 255, 255, 0.05)'; ?>; color: <?php echo $s['is_featured'] ? '#00c853' : 'var(--text-gray)'; ?>;">
+                                            <?php echo $s['is_featured'] ? 'Yes' : 'No'; ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge" style="background: <?php echo $s['is_active'] ? 'rgba(0, 200, 83, 0.2)' : 'rgba(255, 59, 48, 0.2)'; ?>; color: <?php echo $s['is_active'] ? '#00c853' : '#ff3b30'; ?>;">
+                                            <?php echo $s['is_active'] ? 'Active' : 'Inactive'; ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn-dashboard complete-btn" 
+                                                onclick='openEditServiceModal(<?php echo json_encode($s, JSON_HEX_APOS | JSON_HEX_QUOT); ?>)' 
+                                                title="Edit Service">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn-dashboard cancel-btn" 
+                                                onclick="deleteService(<?php echo $s['id']; ?>)" 
+                                                title="Delete Service">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            <?php if (count($allServices) === 0): ?>
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">No services found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($tab === 'users'): ?>
+            <!-- Manage Users View -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users-gear"></i> User Registry & Access Control</h3>
+                </div>
+                <div class="events-table-wrapper">
+                    <table class="events-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Joined Date</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($allUsers as $u): ?>
+                                <tr>
+                                    <td>#USR-<?php echo $u['id']; ?></td>
+                                    <td><strong><?php echo htmlspecialchars($u['name']); ?></strong></td>
+                                    <td><?php echo htmlspecialchars($u['email']); ?></td>
+                                    <td><?php echo htmlspecialchars($u['phone'] ?: 'N/A'); ?></td>
+                                    <td><?php echo date('Y-m-d', strtotime($u['created_at'])); ?></td>
+                                    <td>
+                                        <select class="status-select-dropdown" 
+                                                onchange="updateUser(<?php echo $u['id']; ?>, 'role', this.value)" 
+                                                style="background: rgba(17, 17, 21, 0.8); color: var(--text-white); border: 1px solid var(--border-dark); border-radius: 8px; padding: 4px 8px; outline: none; cursor: pointer;">
+                                            <option value="user" <?php echo $u['role'] === 'user' ? 'selected' : ''; ?>>User</option>
+                                            <option value="vendor" <?php echo $u['role'] === 'vendor' ? 'selected' : ''; ?>>Vendor</option>
+                                            <option value="admin" <?php echo $u['role'] === 'admin' ? 'selected' : ''; ?>>Admin</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="status-select-dropdown" 
+                                                onchange="updateUser(<?php echo $u['id']; ?>, 'status', this.value)" 
+                                                style="background: rgba(17, 17, 21, 0.8); color: <?php echo $u['status'] === 'active' ? '#00c853' : ($u['status'] === 'banned' ? '#ff3b30' : '#ffab00'); ?>; border: 1px solid var(--border-dark); border-radius: 8px; padding: 4px 8px; outline: none; cursor: pointer; font-weight: 600;">
+                                            <option value="active" style="color: #00c853;" <?php echo $u['status'] === 'active' ? 'selected' : ''; ?>>Active</option>
+                                            <option value="inactive" style="color: #ffab00;" <?php echo $u['status'] === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
+                                            <option value="banned" style="color: #ff3b30;" <?php echo $u['status'] === 'banned' ? 'selected' : ''; ?>>Banned</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <!-- Footer -->
             <div class="footer">
@@ -1002,16 +1266,73 @@ try {
         </main>
     </div>
 
-    <!-- Simple Interaction Script -->
-    <script>
-        // Sidebar navigation highlight simulation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+    <!-- Glassmorphic Modal for Adding/Editing Services -->
+    <div id="serviceModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="modal-card" style="background: rgba(17, 17, 21, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--border-radius); padding: 2rem; width: 90%; max-width: 600px; box-shadow: var(--shadow-card); position: relative; animation: modalAppear 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <button onclick="closeServiceModal()" style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; transition: var(--transition);" onmouseover="this.style.color='var(--text-white)'" onmouseout="this.style.color='var(--text-muted)'">&times;</button>
+            
+            <h3 id="modalTitle" style="color: var(--gold-primary); margin-bottom: 1.5rem; font-size: 1.4rem;"><i class="fas fa-gem"></i> Add New Service</h3>
+            
+            <form id="serviceForm" onsubmit="handleServiceSubmit(event)">
+                <input type="hidden" id="serviceId" name="service_id">
+                <input type="hidden" id="modalAction" name="action" value="add_service">
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: var(--text-gray); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500;">Service Name *</label>
+                    <input type="text" id="serviceName" name="name" required style="width: 100%; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-white); outline: none;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label style="display: block; color: var(--text-gray); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500;">Category *</label>
+                        <select id="serviceCategory" name="category" required style="width: 100%; padding: 0.8rem 1rem; background: rgba(17, 17, 21, 0.9); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-white); outline: none; cursor: pointer;">
+                            <option value="wedding">Wedding</option>
+                            <option value="birthday">Birthday</option>
+                            <option value="corporate">Corporate</option>
+                            <option value="photography">Photography</option>
+                            <option value="catering">Catering</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="venue">Venue</option>
+                            <option value="decoration">Decoration</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; color: var(--text-gray); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500;">Price (Rs) *</label>
+                        <input type="number" id="servicePrice" name="price" required min="1" style="width: 100%; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-white); outline: none;">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: var(--text-gray); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500;">Cover Image URL</label>
+                    <input type="url" id="serviceImageUrl" name="image_url" placeholder="https://images.unsplash.com/..." style="width: 100%; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-white); outline: none;">
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: var(--text-gray); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500;">Short Description *</label>
+                    <input type="text" id="serviceShortDesc" name="short_description" required placeholder="A brief summary of what's included..." style="width: 100%; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-white); outline: none;">
+                </div>
+                
+                <div style="margin-bottom: 1.2rem;">
+                    <label style="display: block; color: var(--text-gray); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500;">Full Description</label>
+                    <textarea id="serviceDesc" name="description" rows="4" style="width: 100%; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-dark); border-radius: 8px; color: var(--text-white); outline: none; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+                    <input type="checkbox" id="serviceFeatured" name="is_featured" style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--gold-primary);">
+                    <label for="serviceFeatured" style="color: var(--text-gray); font-size: 0.9rem; cursor: pointer; user-select: none;">Feature this service on home page</label>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--text-white) !important;" onclick="closeServiceModal()">Cancel</button>
+                    <button type="submit" class="btn">Save Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <!-- AJAX & Interaction Scripts -->
+    <script>
         // Toast notification
         function showMessage(msg) {
             let toast = document.createElement('div');
@@ -1047,6 +1368,114 @@ try {
                 if (result.success) {
                     showMessage(`✅ ${result.message}`);
                     setTimeout(() => location.reload(), 1000);
+                } else {
+                    showMessage(`❌ ${result.message}`);
+                }
+            } catch (err) {
+                showMessage('❌ Connection error. Please try again.');
+            }
+        }
+
+        // Modal elements & helpers
+        const serviceModal = document.getElementById('serviceModal');
+        const serviceForm = document.getElementById('serviceForm');
+        
+        function openAddServiceModal() {
+            serviceForm.reset();
+            document.getElementById('serviceId').value = '';
+            document.getElementById('modalAction').value = 'add_service';
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-gem"></i> Add New Service';
+            serviceModal.classList.add('active');
+        }
+        
+        function openEditServiceModal(s) {
+            serviceForm.reset();
+            document.getElementById('serviceId').value = s.id;
+            document.getElementById('modalAction').value = 'edit_service';
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Service Details';
+            
+            document.getElementById('serviceName').value = s.name || '';
+            document.getElementById('serviceCategory').value = s.category || 'other';
+            document.getElementById('servicePrice').value = Math.round(s.price) || 0;
+            document.getElementById('serviceImageUrl').value = s.image_url || '';
+            document.getElementById('serviceShortDesc').value = s.short_description || '';
+            document.getElementById('serviceDesc').value = s.description || '';
+            document.getElementById('serviceFeatured').checked = parseInt(s.is_featured) === 1;
+            
+            serviceModal.classList.add('active');
+        }
+        
+        function closeServiceModal() {
+            serviceModal.classList.remove('active');
+        }
+        
+        // Handle service form submit
+        async function handleServiceSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(serviceForm);
+            
+            try {
+                const response = await fetch('admin-dashboard.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showMessage(`✅ ${result.message}`);
+                    closeServiceModal();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showMessage(`❌ ${result.message}`);
+                }
+            } catch (err) {
+                showMessage('❌ Connection error. Please try again.');
+            }
+        }
+        
+        // Delete service
+        async function deleteService(serviceId) {
+            if (!confirm('Are you sure you want to delete this service? All bookings linked to this service will be affected.')) return;
+            
+            const formData = new FormData();
+            formData.append('action', 'delete_service');
+            formData.append('service_id', serviceId);
+            
+            try {
+                const response = await fetch('admin-dashboard.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showMessage(`✅ ${result.message}`);
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showMessage(`❌ ${result.message}`);
+                }
+            } catch (err) {
+                showMessage('❌ Connection error. Please try again.');
+            }
+        }
+        
+        // Update User Role/Status
+        async function updateUser(userId, field, value) {
+            const formData = new FormData();
+            formData.append('action', 'update_user');
+            formData.append('user_id', userId);
+            formData.append('field', field);
+            formData.append('value', value);
+            
+            try {
+                const response = await fetch('admin-dashboard.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showMessage(`✅ ${result.message}`);
+                    if (field === 'status') {
+                        setTimeout(() => location.reload(), 1000);
+                    }
                 } else {
                     showMessage(`❌ ${result.message}`);
                 }

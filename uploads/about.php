@@ -12,9 +12,15 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <style>
+        /* Define global animation settings and custom transition curve */
+        :root {
+            --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         /* About page specific styles */
         .about-hero {
-            background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95)), url('https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=1200');
+            background: linear-gradient(135deg, rgba(15,23,42,0.85), rgba(30,41,59,0.85)), url('https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=1200');
             background-size: cover;
             background-position: center;
             padding: 6rem 2rem;
@@ -24,12 +30,10 @@ if (session_status() === PHP_SESSION_NONE) {
             margin-bottom: 4rem;
             position: relative;
             overflow: hidden;
-            animation: heroGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes heroGlow {
-            0%, 100% { box-shadow: 0 0 30px rgba(251,191,36,0.3); }
-            50% { box-shadow: 0 0 60px rgba(251,191,36,0.6); }
+            animation: heroGlow 4s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
         }
 
         .about-hero::before {
@@ -39,7 +43,7 @@ if (session_status() === PHP_SESSION_NONE) {
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%);
             animation: rotate 30s linear infinite;
         }
 
@@ -49,8 +53,10 @@ if (session_status() === PHP_SESSION_NONE) {
             margin-bottom: 1.5rem;
             position: relative;
             z-index: 2;
-            animation: fadeInDown 1s ease-out;
-            text-shadow: 0 0 20px rgba(251,191,36,0.5);
+            animation: fadeInDown 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-shadow: 0 0 20px rgba(251,191,36,0.3);
+            font-weight: 800;
+            letter-spacing: -0.03em;
         }
 
         .about-hero p {
@@ -60,22 +66,28 @@ if (session_status() === PHP_SESSION_NONE) {
             margin: 0 auto;
             position: relative;
             z-index: 2;
-            animation: fadeInUp 1s ease-out 0.3s both;
+            animation: fadeInUp 1s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s both;
         }
 
         .floating-badge {
             position: absolute;
             top: 20px;
             right: 20px;
-            background: rgba(251,191,36,0.2);
+            background: rgba(251, 191, 36, 0.1);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 0.8rem 1.5rem;
             border-radius: 50px;
-            border: 1px solid rgba(251,191,36,0.5);
+            border: 1px solid rgba(251,191,36,0.3);
             color: var(--accent-gold);
             font-weight: 600;
-            animation: float 3s ease-in-out infinite;
+            animation: float 4s ease-in-out infinite;
             z-index: 3;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         /* Story Section */
@@ -85,12 +97,21 @@ if (session_status() === PHP_SESSION_NONE) {
             gap: 4rem;
             align-items: center;
             margin: 4rem 0;
-            background: white;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
             border-radius: var(--border-radius);
             padding: 3rem;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
             position: relative;
             overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .story-section:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(251, 191, 36, 0.2);
         }
 
         .story-section::before {
@@ -99,21 +120,25 @@ if (session_status() === PHP_SESSION_NONE) {
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-purple), var(--accent-pink));
-            animation: slideGradient 3s linear infinite;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-amber), var(--accent-gold));
+            animation: slideGradient 4s linear infinite;
             background-size: 200% 100%;
         }
 
         .story-content {
-            animation: slideInLeft 1s ease-out;
+            animation: slideInLeft 1s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .story-content h2 {
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary-dark), var(--accent-purple));
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent-amber));
+            -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
 
         .story-content p {
@@ -125,7 +150,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         .story-image {
             position: relative;
-            animation: slideInRight 1s ease-out;
+            animation: slideInRight 1s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .story-image img {
@@ -144,7 +169,7 @@ if (session_status() === PHP_SESSION_NONE) {
             position: absolute;
             bottom: -20px;
             right: -20px;
-            background: var(--accent-gold);
+            background: var(--gradient-gold);
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -153,6 +178,7 @@ if (session_status() === PHP_SESSION_NONE) {
             justify-content: center;
             font-size: 1.8rem;
             animation: bounce 2s ease-in-out infinite;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
         }
 
         /* Stats Section */
@@ -164,7 +190,10 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         .stat-card {
-            background: white;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
             padding: 2rem;
             border-radius: var(--border-radius);
             text-align: center;
@@ -172,7 +201,7 @@ if (session_status() === PHP_SESSION_NONE) {
             transition: var(--transition-bounce);
             position: relative;
             overflow: hidden;
-            animation: cardAppear 0.6s ease-out backwards;
+            animation: cardAppear 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
         }
 
         .stat-card:nth-child(1) { animation-delay: 0.1s; }
@@ -183,6 +212,7 @@ if (session_status() === PHP_SESSION_NONE) {
         .stat-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
+            border-color: rgba(251, 191, 36, 0.3);
         }
 
         .stat-card::before {
@@ -192,7 +222,7 @@ if (session_status() === PHP_SESSION_NONE) {
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -216,17 +246,20 @@ if (session_status() === PHP_SESSION_NONE) {
 
         .stat-number {
             font-size: 2.8rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--primary-dark);
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
         }
 
         .stat-label {
             color: var(--text-muted);
             font-size: 1.1rem;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* Steps Section */
@@ -242,8 +275,12 @@ if (session_status() === PHP_SESSION_NONE) {
         .section-header h2 {
             font-size: 2.8rem;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary-dark), var(--accent-purple));
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent-amber));
+            -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
 
         .section-header p {
@@ -267,19 +304,17 @@ if (session_status() === PHP_SESSION_NONE) {
             left: 10%;
             width: 80%;
             height: 3px;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-purple), var(--accent-pink));
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-amber), var(--accent-gold));
             z-index: 1;
-            animation: dash 3s linear infinite;
+            animation: slideGradient 4s linear infinite;
             background-size: 200% 100%;
         }
 
-        @keyframes dash {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 200% 0%; }
-        }
-
         .step-item {
-            background: white;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
             padding: 2.5rem 1.5rem;
             border-radius: var(--border-radius);
             text-align: center;
@@ -287,7 +322,7 @@ if (session_status() === PHP_SESSION_NONE) {
             position: relative;
             z-index: 2;
             transition: var(--transition-bounce);
-            animation: stepAppear 0.8s ease-out backwards;
+            animation: stepAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
         }
 
         .step-item:nth-child(1) { animation-delay: 0.1s; }
@@ -295,20 +330,10 @@ if (session_status() === PHP_SESSION_NONE) {
         .step-item:nth-child(3) { animation-delay: 0.5s; }
         .step-item:nth-child(4) { animation-delay: 0.7s; }
 
-        @keyframes stepAppear {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .step-item:hover {
             transform: translateY(-15px) scale(1.02);
             box-shadow: var(--shadow-lg);
+            border-color: rgba(251, 191, 36, 0.3);
         }
 
         .step-number {
@@ -316,7 +341,7 @@ if (session_status() === PHP_SESSION_NONE) {
             top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            background: var(--gradient-gold);
             color: var(--primary-dark);
             width: 40px;
             height: 40px;
@@ -344,7 +369,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         .step-item:hover .step-icon {
             transform: rotate(360deg) scale(1.1);
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            background: var(--gradient-gold);
         }
 
         .step-icon i {
@@ -372,9 +397,13 @@ if (session_status() === PHP_SESSION_NONE) {
         /* Values Section */
         .values-section {
             margin: 5rem 0;
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
             padding: 4rem;
             border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
         }
 
         .values-grid {
@@ -385,7 +414,10 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         .value-card {
-            background: white;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
             padding: 2.5rem 2rem;
             border-radius: var(--border-radius);
             text-align: center;
@@ -393,7 +425,7 @@ if (session_status() === PHP_SESSION_NONE) {
             transition: var(--transition-bounce);
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 0.8s ease-out backwards;
+            animation: fadeInUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) backwards;
         }
 
         .value-card:nth-child(1) { animation-delay: 0.1s; }
@@ -407,7 +439,7 @@ if (session_status() === PHP_SESSION_NONE) {
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-purple), var(--accent-pink));
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-amber), var(--accent-gold));
             transform: translateX(-100%);
             transition: transform 0.5s ease;
         }
@@ -419,6 +451,7 @@ if (session_status() === PHP_SESSION_NONE) {
         .value-card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: var(--shadow-lg);
+            border-color: rgba(251, 191, 36, 0.3);
         }
 
         .value-icon {
@@ -435,7 +468,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         .value-card:hover .value-icon {
             transform: rotate(360deg);
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            background: var(--gradient-gold);
         }
 
         .value-icon i {
@@ -472,12 +505,15 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         .team-card {
-            background: white;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow-md);
             transition: var(--transition-bounce);
-            animation: fadeInUp 0.8s ease-out backwards;
+            animation: fadeInUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) backwards;
             position: relative;
         }
 
@@ -489,6 +525,7 @@ if (session_status() === PHP_SESSION_NONE) {
         .team-card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: var(--shadow-lg);
+            border-color: rgba(251, 191, 36, 0.3);
         }
 
         .team-image {
@@ -513,13 +550,14 @@ if (session_status() === PHP_SESSION_NONE) {
             bottom: -50px;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, rgba(251,191,36,0.9), rgba(245,158,11,0.9));
+            background: linear-gradient(135deg, rgba(251,191,36,0.95), rgba(245,158,11,0.95));
             padding: 1rem;
             display: flex;
             gap: 1rem;
             justify-content: center;
             transition: bottom 0.3s ease;
             backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
         .team-card:hover .team-social {
@@ -549,16 +587,20 @@ if (session_status() === PHP_SESSION_NONE) {
 
         .team-info p {
             color: var(--accent-amber);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* Testimonials Section */
         .testimonials-section {
             margin: 5rem 0;
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 4rem;
             border-radius: var(--border-radius);
             color: white;
+            box-shadow: var(--shadow-lg);
         }
 
         .testimonials-section h2 {
@@ -575,13 +617,14 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         .testimonial-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
             padding: 2rem;
             border-radius: var(--border-radius);
-            border: 1px solid rgba(255,255,255,0.2);
             transition: var(--transition-bounce);
-            animation: fadeInUp 0.8s ease-out backwards;
+            animation: fadeInUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) backwards;
         }
 
         .testimonial-card:nth-child(1) { animation-delay: 0.1s; }
@@ -589,7 +632,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         .testimonial-card:hover {
             transform: translateY(-5px);
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
             border-color: var(--accent-gold);
         }
 
@@ -604,6 +647,7 @@ if (session_status() === PHP_SESSION_NONE) {
             line-height: 1.8;
             margin-bottom: 1.5rem;
             font-style: italic;
+            color: #cbd5e1;
         }
 
         .testimonial-author {
@@ -634,11 +678,15 @@ if (session_status() === PHP_SESSION_NONE) {
         .cta-section {
             text-align: center;
             padding: 4rem;
-            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            background: linear-gradient(135deg, rgba(254, 243, 199, 0.8), rgba(254, 215, 170, 0.8));
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
             border-radius: var(--border-radius);
             margin: 4rem 0;
             position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow-md);
         }
 
         .cta-section::before {
@@ -658,6 +706,7 @@ if (session_status() === PHP_SESSION_NONE) {
             color: var(--primary-dark);
             position: relative;
             z-index: 2;
+            font-weight: 800;
         }
 
         .cta-section p {
@@ -679,6 +728,53 @@ if (session_status() === PHP_SESSION_NONE) {
         .cta-buttons .btn {
             padding: 1rem 2.5rem;
             font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes cardAppear {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes stepAppear {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) translateX(-50%); }
+            50% { transform: scale(1.05) translateX(-50%); }
+        }
+        @keyframes heroGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(251,191,36,0.25); }
+            50% { box-shadow: 0 0 60px rgba(251,191,36,0.45); }
+        }
+        @keyframes slideGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Responsive */
@@ -703,6 +799,8 @@ if (session_status() === PHP_SESSION_NONE) {
         @media (max-width: 768px) {
             .story-section {
                 grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 1.8rem;
             }
             
             .steps-container {
@@ -727,6 +825,12 @@ if (session_status() === PHP_SESSION_NONE) {
             
             .about-hero h1 {
                 font-size: 2.2rem;
+            }
+            .values-section {
+                padding: 2rem 1.5rem;
+            }
+            .testimonials-section {
+                padding: 2rem 1.5rem;
             }
         }
     </style>
