@@ -1,8 +1,11 @@
 <?php
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+// Only send JSON headers for API files in backend folder
+if (isset($_SERVER['SCRIPT_FILENAME']) && basename(dirname($_SERVER['SCRIPT_FILENAME'])) === 'backend' && !in_array(basename($_SERVER['SCRIPT_FILENAME']), ['install_db.php', 'create_admin.php'])) {
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
+}
 
 session_start();
 

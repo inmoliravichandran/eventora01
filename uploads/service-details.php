@@ -166,7 +166,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
                 <h1 class="service-title"><?php echo htmlspecialchars($service['name']); ?></h1>
                 
                 <div class="rating-row">
-                    <div class="stars"><?php echo str_repeat('★', Math.floor($service['rating'])) . str_repeat('☆', 5 - Math.floor($service['rating'])); ?></div>
+                    <div class="stars"><?php echo str_repeat('★', floor($service['rating'])) . str_repeat('☆', 5 - floor($service['rating'])); ?></div>
                     <span>(<?php echo $service['total_reviews']; ?> reviews)</span>
                 </div>
                 

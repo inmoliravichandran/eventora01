@@ -397,7 +397,7 @@ function getServiceIcon($cat) {
             <?php if (count($services) > 0): ?>
                 <?php foreach ($services as $service): ?>
                     <?php 
-                    $starsCount = Math.floor($service['rating']);
+                    $starsCount = floor($service['rating']);
                     $halfStar = ($service['rating'] - $starsCount) >= 0.5 ? 1 : 0;
                     $stars = str_repeat('★', $starsCount) . ($halfStar ? '½' : '');
                     ?>
