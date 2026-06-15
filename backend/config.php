@@ -7,7 +7,9 @@ if (isset($_SERVER['SCRIPT_FILENAME']) && basename(dirname($_SERVER['SCRIPT_FILE
     header('Access-Control-Allow-Headers: Content-Type, Authorization');
 }
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $host = '127.0.0.1';
 $dbname = 'eventora_db';
