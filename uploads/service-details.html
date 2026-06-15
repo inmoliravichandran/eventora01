@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Eventora | Premium Wedding Package - Service Details with Cart & Booking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0f172a;
+            --primary-light: #1e293b;
+            --accent-gold: #fbbf24;
+            --accent-amber: #f59e0b;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-gold: 0 0 20px rgba(251,191,36,0.3);
+            --border-radius: 20px;
+            --border-radius-sm: 12px;
+            --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        .global-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-bounce);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover { color: var(--accent-gold); transform: translateY(-2px); }
+        .cart-icon { position: relative; }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-content { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .breadcrumb { margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted); }
+        .breadcrumb a { color: var(--accent-amber); text-decoration: none; }
+
+        /* Detail Grid */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2.5rem;
+        }
+
+        .gallery-section { background: #f1f5f9; padding: 1rem; }
+        .main-image { width: 100%; height: 380px; object-fit: cover; border-radius: var(--border-radius-sm); }
+        .thumbnail-grid { display: flex; gap: 0.8rem; margin-top: 1rem; flex-wrap: wrap; }
+        .thumbnail { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid transparent; }
+        .thumbnail.active { border-color: var(--accent-gold); }
+
+        .info-section { padding: 1.8rem 1.8rem 1.8rem 0; }
+        .service-category { background: var(--accent-gold); padding: 0.2rem 1rem; border-radius: 30px; font-size: 0.8rem; font-weight: 600; display: inline-block; margin-bottom: 1rem; }
+        .service-title { font-size: 2rem; margin-bottom: 0.5rem; }
+        .rating-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .stars { color: var(--accent-gold); letter-spacing: 2px; }
+        .price-tag { font-size: 1.8rem; font-weight: 700; color: var(--accent-amber); margin: 1rem 0; }
+        .feature-list { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.5rem; }
+        .feature-item { background: #f1f5f9; padding: 0.4rem 1rem; border-radius: 30px; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        /* Package Options */
+        .package-options { margin: 1rem 0; padding: 1rem; background: #f8fafc; border-radius: var(--border-radius-sm); }
+        .package-select { width: 100%; padding: 0.6rem; border-radius: 30px; border: 1px solid var(--border-light); margin-top: 0.5rem; }
+
+        .action-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+        .btn-primary, .btn-cart { background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber)); color: var(--primary-dark); border: none; padding: 0.8rem 1.8rem; border-radius: 40px; font-weight: 700; cursor: pointer; transition: var(--transition-bounce); display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-outline { background: white; border: 2px solid var(--border-light); padding: 0.8rem 1.8rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        .btn-outline:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.2);
+            z-index: 1100;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-light); padding-bottom: 1rem; }
+        .cart-items { flex: 1; margin: 1rem 0; }
+        .cart-item { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--border-light); }
+        .cart-item-details h4 { font-size: 1rem; }
+        .cart-item-actions { display: flex; gap: 0.5rem; align-items: center; }
+        .cart-item-actions button { background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; }
+        .cart-total { border-top: 2px solid var(--border-light); padding-top: 1rem; font-weight: 700; font-size: 1.2rem; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050; display: none; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 0.75rem 1.5rem; border-radius: 40px; z-index: 2000; border-left: 4px solid var(--accent-gold); }
+
+        /* Checkout Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1200;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            width: 90%;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal input, .modal textarea { width: 100%; padding: 0.6rem; margin: 0.5rem 0; border-radius: 30px; border: 1px solid var(--border-light); }
+        .booking-history { margin-top: 2rem; background: white; border-radius: var(--border-radius); padding: 1.5rem; }
+        .history-item { border-bottom: 1px solid var(--border-light); padding: 0.8rem 0; }
+        footer { background: var(--primary-dark); margin-top: 3rem; padding: 2rem; text-align: center; color: #cbd5e1; }
+        @media (max-width: 900px) { .detail-grid { grid-template-columns: 1fr; } .info-section { padding: 1.5rem; } .cart-sidebar { width: 100%; right: -100%; } }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <div class="logo">Eventora</div>
+        <nav class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="services.html"><i class="fas fa-calendar-alt"></i> Services</a>
+            <a href="#" id="cartIconNav" class="cart-icon"><i class="fas fa-shopping-cart"></i> Cart <span id="cartCountBadge" class="cart-count">0</span></a>
+            <a href="#" id="historyNav"><i class="fas fa-history"></i> Bookings</a>
+            <a href="login.html"><i class="fas fa-user"></i> Profile</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="breadcrumb"><a href="services.html">Services</a> / <span id="breadcrumbCategory">Wedding</span> / <strong>Premium Wedding Package</strong></div>
+
+        <div class="detail-grid">
+            <div class="gallery-section">
+                <img id="mainImage" class="main-image" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600">
+                <div class="thumbnail-grid" id="thumbnailContainer"></div>
+            </div>
+            <div class="info-section">
+                <span class="service-category" id="serviceCategoryBadge">Wedding</span>
+                <h1 class="service-title" id="serviceDetailName">Premium Wedding Package</h1>
+                <div class="rating-row"><div class="stars" id="starRating">★★★★★</div><span id="reviewCount">(128 reviews)</span></div>
+                <div class="price-tag" id="servicePriceDisplay">Rs 150,000</div>
+                <p id="serviceFullDescription">Complete wedding arrangement including venue decoration, catering for 100 guests, photography, and coordination.</p>
+                <div class="feature-list" id="featureList"></div>
+                
+                <!-- Package selection & Customization -->
+                <div class="package-options">
+                    <label><strong>📦 Select Package:</strong></label>
+                    <select id="packageSelect" class="package-select">
+                        <option value="standard">Standard Package - Rs 150,000</option>
+                        <option value="premium">Premium Package - Rs 220,000 (+DJ, extra decor)</option>
+                        <option value="luxury">Luxury Package - Rs 320,000 (Live band, drone)</option>
+                    </select>
+                    <label style="margin-top:0.8rem"><strong>➕ Customization (optional):</strong></label>
+                    <div><label><input type="checkbox" id="customCatering"> Extra Catering (+Rs 25,000)</label></div>
+                    <div><label><input type="checkbox" id="customPhotography"> Extended Photography (+Rs 15,000)</label></div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-cart" id="addToCartBtn"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+                    <button class="btn-outline" id="wishlistBtn"><i class="far fa-heart"></i> Wishlist</button>
+                    <button class="btn-outline" id="quoteBtn"><i class="fas fa-file-invoice"></i> Quote</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs (Reviews) -->
+        <div class="detail-tabs" style="background:white; border-radius:var(--border-radius); padding:1rem;">
+            <h3>⭐ Customer Reviews</h3>
+            <div id="reviewsList"></div>
+            <textarea id="newReviewComment" placeholder="Write your review..." rows="2" style="width:100%; margin:1rem 0; padding:0.5rem; border-radius:12px;"></textarea>
+            <select id="newReviewRating"><option value="5">★★★★★ (5)</option><option value="4">★★★★☆ (4)</option><option value="3">★★★☆☆ (3)</option></select>
+            <button class="btn-primary" id="submitReviewBtn" style="margin-top:0.5rem;">Submit Review</button>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header"><h3><i class="fas fa-shopping-cart"></i> Your Cart</h3><button id="closeCartBtn" style="background:none; border:none; font-size:1.5rem;">&times;</button></div>
+        <div class="cart-items" id="cartItemsContainer"></div>
+        <div class="cart-total" id="cartTotal">Total: Rs 0</div>
+        <div><label>Coupon Code: <input type="text" id="couponInput" placeholder="SAVE10" style="width:100%; margin:0.5rem 0; padding:0.4rem;"></label><button id="applyCouponBtn" class="btn-outline" style="width:100%;">Apply</button></div>
+        <button id="checkoutBtn" class="btn-primary" style="width:100%; margin-top:1rem;">Proceed to Checkout</button>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <h3>📋 Event Information</h3>
+            <input type="text" id="eventName" placeholder="Event Name (e.g., Sarah & John Wedding)" value="Wedding Celebration">
+            <input type="date" id="eventDate">
+            <input type="text" id="eventLocation" placeholder="Event Location">
+            <textarea id="specialRequests" placeholder="Special requests / notes"></textarea>
+            <div id="checkoutSummary" style="margin:1rem 0;"></div>
+            <label><input type="checkbox" id="agreeTerms"> I agree to the cancellation policy</label>
+            <button id="confirmPaymentBtn" class="btn-primary" style="width:100%; margin-top:1rem;">💳 Make Payment & Confirm Booking</button>
+            <button id="closeModalBtn" style="margin-top:0.5rem; background:none; border:none; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Booking History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <h3>📜 Your Booking History</h3>
+            <div id="bookingHistoryList"></div>
+            <button id="closeHistoryBtn" class="btn-outline" style="margin-top:1rem;">Close</button>
+        </div>
+    </div>
+
+    <footer><p>© 2026 Eventora · Premium Event Services · Sri Lanka</p></footer>
+
+    <script>
+        // Service Data
+        const service = {
+            id: 'wedding',
+            name: 'Premium Wedding Package',
+            category: 'wedding',
+            basePrice: 150000,
+            rating: 4.8,
+            popularity: 128,
+            image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600',
+            gallery: ['https://images.unsplash.com/photo-1519741497674-611481863552?w=600','https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600','https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600'],
+            description: 'Luxury wedding coordination with elaborate decor, premium catering, professional photography.',
+            features: ['100-150 Guests', 'Full Venue Decoration', '5-Course Catering', 'Pro Photography', 'DJ & Lighting', 'Wedding Planner'],
+            reviews: [{ user: 'Nisha Perera', rating: 5, comment: 'Absolutely magical!', date: 'Dec 2025' }]
+        };
+
+        // Cart state: { id, name, basePrice, selectedPackage, customizations, totalPrice, quantity, packageName }
+        let cart = JSON.parse(localStorage.getItem('eventoraCart') || '[]');
+        let appliedDiscount = 0;
+        let discountPercent = 0;
+        let bookings = JSON.parse(localStorage.getItem('eventoraBookings') || '[]');
+
+        function getPackagePrice(pkgType) {
+            if(pkgType === 'standard') return 150000;
+            if(pkgType === 'premium') return 220000;
+            return 320000;
+        }
+        function getPackageName(pkgType) {
+            if(pkgType === 'standard') return 'Standard';
+            if(pkgType === 'premium') return 'Premium (+DJ/Extra Decor)';
+            return 'Luxury (Live Band/Drone)';
+        }
+
+        function calculateTotalForItem(pkgType, customCatering, customPhoto) {
+            let total = getPackagePrice(pkgType);
+            if(customCatering) total += 25000;
+            if(customPhoto) total += 15000;
+            return total;
+        }
+
+        function getCurrentItemConfig() {
+            const pkgSelect = document.getElementById('packageSelect').value;
+            const catering = document.getElementById('customCatering').checked;
+            const photo = document.getElementById('customPhotography').checked;
+            const total = calculateTotalForItem(pkgSelect, catering, photo);
+            return { packageType: pkgSelect, customCatering: catering, customPhoto: photo, totalPrice: total, packageName: getPackageName(pkgSelect) };
+        }
+
+        function addToCart() {
+            const config = getCurrentItemConfig();
+            const existingIndex = cart.findIndex(item => item.id === service.id && item.packageType === config.packageType && item.customCatering === config.customCatering && item.customPhoto === config.customPhoto);
+            if(existingIndex !== -1) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push({
+                    id: service.id,
+                    name: service.name,
+                    packageType: config.packageType,
+                    packageName: config.packageName,
+                    customCatering: config.customCatering,
+                    customPhoto: config.customPhoto,
+                    totalPrice: config.totalPrice,
+                    quantity: 1,
+                    image: service.image
+                });
+            }
+            localStorage.setItem('eventoraCart', JSON.stringify(cart));
+            updateCartUI();
+            showToast(`${service.name} (${config.packageName}) added to cart!`);
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItemsContainer');
+            if(!container) return;
+            let subtotal = 0;
+            container.innerHTML = '';
+            cart.forEach((item, idx) => {
+                const itemTotal = item.totalPrice * item.quantity;
+                subtotal += itemTotal;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-details"><h4>${item.name}</h4><small>${item.packageName} ${item.customCatering ? '+Catering' : ''} ${item.customPhoto ? '+Photo' : ''}</small><br>Rs ${item.totalPrice.toLocaleString()} x ${item.quantity}</div>
+                        <div class="cart-item-actions">
+                            <button onclick="updateQuantity(${idx}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${idx}, 1)">+</button>
+                            <button onclick="removeCartItem(${idx})" style="background:#fee2e2;"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+            });
+            let totalAfterDiscount = subtotal - (subtotal * discountPercent / 100);
+            document.getElementById('cartTotal').innerHTML = `Subtotal: Rs ${subtotal.toLocaleString()}<br>Discount: ${discountPercent}% off<br><strong>Total: Rs ${Math.max(0, totalAfterDiscount).toLocaleString()}</strong>`;
+            document.getElementById('cartCountBadge').innerText = cart.reduce((sum, i) => sum + i.quantity, 0);
+            localStorage.setItem('eventoraCart', JSON.stringify(cart));
+        }
+
+        window.updateQuantity = (idx, delta) => {
+            if(cart[idx]) {
+                cart[idx].quantity += delta;
+                if(cart[idx].quantity <= 0) cart.splice(idx,1);
+                localStorage.setItem('eventoraCart', JSON.stringify(cart));
+                updateCartUI();
+            }
+        };
+        window.removeCartItem = (idx) => { cart.splice(idx,1); localStorage.setItem('eventoraCart', JSON.stringify(cart)); updateCartUI(); };
+
+        function applyCoupon() {
+            const code = document.getElementById('couponInput').value.trim();
+            if(code === 'SAVE10') { discountPercent = 10; showToast('Coupon applied! 10% off'); }
+            else if(code === 'WELCOME20') { discountPercent = 20; showToast('Welcome coupon! 20% off'); }
+            else { discountPercent = 0; showToast('Invalid coupon', true); }
+            updateCartUI();
+        }
+
+        function openCheckout() {
+            if(cart.length === 0) { showToast('Cart is empty!', true); return; }
+            let subtotal = cart.reduce((sum,i)=> sum + (i.totalPrice * i.quantity), 0);
+            let total = subtotal - (subtotal * discountPercent/100);
+            document.getElementById('checkoutSummary').innerHTML = `<strong>Total Amount: Rs ${total.toLocaleString()}</strong><br>Items: ${cart.length}`;
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        function confirmBooking() {
+            const eventName = document.getElementById('eventName').value;
+            const eventDate = document.getElementById('eventDate').value;
+            const location = document.getElementById('eventLocation').value;
+            if(!eventDate) { showToast('Select event date', true); return; }
+            if(!document.getElementById('agreeTerms').checked) { showToast('Please agree to terms', true); return; }
+            let subtotal = cart.reduce((sum,i)=> sum + (i.totalPrice * i.quantity), 0);
+            let finalTotal = subtotal - (subtotal * discountPercent/100);
+            const booking = {
+                id: Date.now(),
+                eventName: eventName || 'Event',
+                date: eventDate,
+                location: location || 'To be confirmed',
+                items: JSON.parse(JSON.stringify(cart)),
+                totalPaid: finalTotal,
+                status: 'Confirmed',
+                bookingDate: new Date().toISOString()
+            };
+            bookings.unshift(booking);
+            localStorage.setItem('eventoraBookings', JSON.stringify(bookings));
+            // Clear cart & reset
+            cart = [];
+            discountPercent = 0;
+            localStorage.setItem('eventoraCart', JSON.stringify(cart));
+            updateCartUI();
+            document.getElementById('checkoutModal').style.display = 'none';
+            showToast(`✅ Booking confirmed for ${eventName}! Total Rs ${finalTotal.toLocaleString()}`);
+            displayBookingHistory();
+        }
+
+        function displayBookingHistory() {
+            const historyDiv = document.getElementById('bookingHistoryList');
+            if(!historyDiv) return;
+            if(bookings.length === 0) { historyDiv.innerHTML = '<p>No bookings yet.</p>'; return; }
+            historyDiv.innerHTML = bookings.map(b => `<div class="history-item"><strong>${b.eventName}</strong> - ${b.date}<br>Total: Rs ${b.totalPaid.toLocaleString()} | Status: ${b.status}<br><small>Booked on: ${new Date(b.bookingDate).toLocaleDateString()}</small></div>`).join('');
+        }
+
+        function showToast(msg, isError=false) {
+            const existing = document.querySelector('.toast');
+            if(existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.background = isError ? '#b91c1c' : '#1e293b';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function toggleWishlist() {
+            let wishlist = JSON.parse(localStorage.getItem('userWishlist') || '[]');
+            if(wishlist.includes(service.id)) {
+                wishlist = wishlist.filter(id => id !== service.id);
+                showToast(`${service.name} removed from wishlist`);
+                document.getElementById('wishlistBtn').innerHTML = '<i class="far fa-heart"></i> Wishlist';
+            } else {
+                wishlist.push(service.id);
+                showToast(`${service.name} added to wishlist ❤️`);
+                document.getElementById('wishlistBtn').innerHTML = '<i class="fas fa-heart"></i> Wishlist';
+            }
+            localStorage.setItem('userWishlist', JSON.stringify(wishlist));
+        }
+
+        function loadServiceUI() {
+            document.getElementById('serviceDetailName').innerText = service.name;
+            document.getElementById('serviceCategoryBadge').innerText = 'Wedding';
+            document.getElementById('servicePriceDisplay').innerHTML = `From Rs ${service.basePrice.toLocaleString()}`;
+            document.getElementById('serviceFullDescription').innerText = service.description;
+            const starHtml = '★'.repeat(Math.floor(service.rating)) + '☆'.repeat(5-Math.floor(service.rating));
+            document.getElementById('starRating').innerHTML = starHtml;
+            document.getElementById('reviewCount').innerText = `(${service.popularity} reviews)`;
+            document.getElementById('featureList').innerHTML = service.features.map(f => `<span class="feature-item"><i class="fas fa-check-circle" style="color:var(--accent-gold)"></i> ${f}</span>`).join('');
+            const thumbContainer = document.getElementById('thumbnailContainer');
+            thumbContainer.innerHTML = service.gallery.map((img, idx) => `<img class="thumbnail ${idx===0?'active':''}" src="${img}">`);
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.addEventListener('click', (e) => { document.querySelectorAll('.thumbnail').forEach(t=>t.classList.remove('active')); thumb.classList.add('active'); document.getElementById('mainImage').src = thumb.src; });
+            });
+            const reviewsDiv = document.getElementById('reviewsList');
+            reviewsDiv.innerHTML = service.reviews.map(r => `<div class="review-item"><b>${r.user}</b> ${'★'.repeat(r.rating)}<br>${r.comment}<small> ${r.date}</small></div>`).join('');
+        }
+
+        function submitReview() {
+            const comment = document.getElementById('newReviewComment').value.trim();
+            const rating = parseInt(document.getElementById('newReviewRating').value);
+            if(!comment) { showToast('Please write a review', true); return; }
+            const newReview = { user: 'You', rating: rating, comment: comment, date: new Date().toLocaleDateString() };
+            service.reviews.unshift(newReview);
+            const reviewsDiv = document.getElementById('reviewsList');
+            reviewsDiv.innerHTML = service.reviews.map(r => `<div class="review-item"><b>${r.user}</b> ${'★'.repeat(r.rating)}<br>${r.comment}<small> ${r.date}</small></div>`).join('');
+            document.getElementById('newReviewComment').value = '';
+            showToast('Thank you for your review!');
+        }
+
+        // Event Listeners & Cart UI
+        document.addEventListener('DOMContentLoaded', () => {
+            loadServiceUI();
+            updateCartUI();
+            displayBookingHistory();
+            document.getElementById('addToCartBtn').addEventListener('click', addToCart);
+            document.getElementById('wishlistBtn').addEventListener('click', toggleWishlist);
+            document.getElementById('quoteBtn').addEventListener('click', () => showToast('Quote request sent to vendor!'));
+            document.getElementById('applyCouponBtn').addEventListener('click', applyCoupon);
+            document.getElementById('checkoutBtn').addEventListener('click', openCheckout);
+            document.getElementById('confirmPaymentBtn').addEventListener('click', confirmBooking);
+            document.getElementById('closeCartBtn').addEventListener('click', () => { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('cartOverlay').style.display = 'none'; });
+            document.getElementById('cartIconNav').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('cartSidebar').classList.add('open'); document.getElementById('cartOverlay').style.display = 'block'; });
+            document.getElementById('cartOverlay').addEventListener('click', () => { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('cartOverlay').style.display = 'none'; });
+            document.getElementById('historyNav').addEventListener('click', (e) => { e.preventDefault(); displayBookingHistory(); document.getElementById('historyModal').style.display = 'flex'; });
+            document.getElementById('closeHistoryBtn').addEventListener('click', () => document.getElementById('historyModal').style.display = 'none');
+            document.getElementById('closeModalBtn').addEventListener('click', () => document.getElementById('checkoutModal').style.display = 'none');
+            document.getElementById('submitReviewBtn').addEventListener('click', submitReview);
+            // package select changes price display
+            const updateDynamicPrice = () => { const cfg = getCurrentItemConfig(); document.getElementById('servicePriceDisplay').innerHTML = `Selected: Rs ${cfg.totalPrice.toLocaleString()}`; };
+            document.getElementById('packageSelect').addEventListener('change', updateDynamicPrice);
+            document.getElementById('customCatering').addEventListener('change', updateDynamicPrice);
+            document.getElementById('customPhotography').addEventListener('change', updateDynamicPrice);
+            updateDynamicPrice();
+        });
+    </script>
+</body>
+</html>

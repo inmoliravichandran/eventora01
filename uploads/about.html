@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventora | How It Works - Your Event Planning Journey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* About page specific styles */
+        .about-hero {
+            background: linear-gradient(135deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95)), url('https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=1200');
+            background-size: cover;
+            background-position: center;
+            padding: 6rem 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            color: white;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+            animation: heroGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(251,191,36,0.3); }
+            50% { box-shadow: 0 0 60px rgba(251,191,36,0.6); }
+        }
+
+        .about-hero::before {
+            content: '✨';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .about-hero h1 {
+            color: white;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            animation: fadeInDown 1s ease-out;
+            text-shadow: 0 0 20px rgba(251,191,36,0.5);
+        }
+
+        .about-hero p {
+            color: #cbd5e1;
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .floating-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(251,191,36,0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid rgba(251,191,36,0.5);
+            color: var(--accent-gold);
+            font-weight: 600;
+            animation: float 3s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        /* Story Section */
+        .story-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin: 4rem 0;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-purple), var(--accent-pink));
+            animation: slideGradient 3s linear infinite;
+            background-size: 200% 100%;
+        }
+
+        .story-content {
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .story-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent-purple));
+            -webkit-text-fill-color: transparent;
+        }
+
+        .story-content p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .story-image {
+            position: relative;
+            animation: slideInRight 1s ease-out;
+        }
+
+        .story-image img {
+            width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-bounce);
+        }
+
+        .story-image:hover img {
+            transform: scale(1.02) rotate(1deg);
+        }
+
+        .story-image::after {
+            content: '📸';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            background: var(--accent-gold);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.6s ease-out backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+            animation: rotate 10s linear infinite;
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: var(--accent-amber);
+            margin-bottom: 1rem;
+            transition: var(--transition-bounce);
+            display: inline-block;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Steps Section */
+        .steps-section {
+            margin: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent-purple));
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 80px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-purple), var(--accent-pink));
+            z-index: 1;
+            animation: dash 3s linear infinite;
+            background-size: 200% 100%;
+        }
+
+        @keyframes dash {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .step-item {
+            background: white;
+            padding: 2.5rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 2;
+            transition: var(--transition-bounce);
+            animation: stepAppear 0.8s ease-out backwards;
+        }
+
+        .step-item:nth-child(1) { animation-delay: 0.1s; }
+        .step-item:nth-child(2) { animation-delay: 0.3s; }
+        .step-item:nth-child(3) { animation-delay: 0.5s; }
+        .step-item:nth-child(4) { animation-delay: 0.7s; }
+
+        @keyframes stepAppear {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-item:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            color: var(--primary-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .step-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem auto;
+            transition: var(--transition-bounce);
+        }
+
+        .step-item:hover .step-icon {
+            transform: rotate(360deg) scale(1.1);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+        }
+
+        .step-icon i {
+            font-size: 3rem;
+            color: var(--accent-amber);
+            transition: var(--transition-bounce);
+        }
+
+        .step-item:hover .step-icon i {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .step-item p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Values Section */
+        .values-section {
+            margin: 5rem 0;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 4rem;
+            border-radius: var(--border-radius);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .value-card:nth-child(1) { animation-delay: 0.1s; }
+        .value-card:nth-child(2) { animation-delay: 0.2s; }
+        .value-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-purple), var(--accent-pink));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .value-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            transition: var(--transition-bounce);
+        }
+
+        .value-card:hover .value-icon {
+            transform: rotate(360deg);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+        }
+
+        .value-icon i {
+            font-size: 2.5rem;
+            color: var(--accent-amber);
+            transition: var(--transition-bounce);
+        }
+
+        .value-card:hover .value-icon i {
+            color: white;
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .value-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Team Section */
+        .team-section {
+            margin: 5rem 0;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .team-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-bounce);
+            animation: fadeInUp 0.8s ease-out backwards;
+            position: relative;
+        }
+
+        .team-card:nth-child(1) { animation-delay: 0.1s; }
+        .team-card:nth-child(2) { animation-delay: 0.2s; }
+        .team-card:nth-child(3) { animation-delay: 0.3s; }
+        .team-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .team-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .team-image {
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .team-card:hover .team-image img {
+            transform: scale(1.1);
+        }
+
+        .team-social {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(251,191,36,0.9), rgba(245,158,11,0.9));
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            transition: bottom 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .team-card:hover .team-social {
+            bottom: 0;
+        }
+
+        .team-social a {
+            color: white;
+            font-size: 1.3rem;
+            transition: var(--transition-bounce);
+        }
+
+        .team-social a:hover {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .team-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .team-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+            color: var(--primary-dark);
+        }
+
+        .team-info p {
+            color: var(--accent-amber);
+            font-weight: 500;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            margin: 5rem 0;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            padding: 4rem;
+            border-radius: var(--border-radius);
+            color: white;
+        }
+
+        .testimonials-section h2 {
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: var(--transition-bounce);
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .testimonial-card:nth-child(1) { animation-delay: 0.1s; }
+        .testimonial-card:nth-child(2) { animation-delay: 0.2s; }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+            border-color: var(--accent-gold);
+        }
+
+        .testimonial-rating {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .author-info h4 {
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            color: var(--accent-gold);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 4rem;
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border-radius: var(--border-radius);
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '✨';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(251,191,36,0.2) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-buttons .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .steps-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .steps-container::before {
+                display: none;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .story-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="global-header">
+        <div class="logo">Eventora</div>
+        <nav class="nav-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="services.html"><i class="fas fa-calendar-alt"></i> Services</a>
+            <a href="about.html"><i class="fas fa-compass"></i> How it works</a>
+            <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <div class="about-hero">
+            <div class="floating-badge">
+                <i class="fas fa-star"></i> Trusted by 10,000+ customers
+            </div>
+            <h1>How Eventora Works</h1>
+            <p>Your journey to the perfect event starts here. Simple, transparent, and magical.</p>
+        </div>
+
+        <!-- Story Section -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>Our Story</h2>
+                <p>Founded in 2024, Eventora was born from a simple idea: planning events should be exciting, not stressful. Our founders experienced firsthand the difficulty of coordinating multiple vendors, comparing prices, and ensuring quality. That's why we built a platform that brings everything together.</p>
+                <p>Today, Eventora is Sri Lanka's fastest-growing event planning platform, connecting thousands of customers with the best vendors in the industry. We're proud to have helped plan over 1,000 events, from intimate birthdays to grand weddings and corporate galas.</p>
+                <div style="display: flex; gap: 2rem; margin-top: 2rem;">
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-amber);">2024</div>
+                        <div style="color: var(--text-muted);">Founded</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-amber);">1000+</div>
+                        <div style="color: var(--text-muted);">Events</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-amber);">50+</div>
+                        <div style="color: var(--text-muted);">Vendors</div>
+                    </div>
+                </div>
+            </div>
+            <div class="story-image">
+                <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600" alt="Our Team">
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-number">1,234+</div>
+                <div class="stat-label">Events Planned</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Partner Vendors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-smile"></i>
+                </div>
+                <div class="stat-number">10k+</div>
+                <div class="stat-label">Happy Clients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support</div>
+            </div>
+        </div>
+
+        <!-- How It Works Steps -->
+        <div class="steps-section">
+            <div class="section-header">
+                <h2>Your Journey in 4 Simple Steps</h2>
+                <p>From dream to reality - we're with you every step of the way</p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Browse Services</h3>
+                    <p>Explore our curated collection of premium event packages from trusted vendors. Compare prices, read reviews, and find your perfect match.</p>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Customize & Book</h3>
+                    <p>Personalize your package, choose your date, and add special requirements. Our smart system ensures everything is just right.</p>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Secure Payment</h3>
+                    <p>Pay securely with our encrypted payment system. Your money is always protected with our buyer guarantee.</p>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3>Enjoy Your Event</h3>
+                    <p>Relax and let our professional vendors handle everything. We'll ensure your special day is absolutely perfect.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="values-section">
+            <div class="section-header">
+                <h2>Our Core Values</h2>
+                <p>What makes Eventora different</p>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Customer First</h3>
+                    <p>Your happiness is our top priority. We go above and beyond to ensure every event is memorable.</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Trust & Safety</h3>
+                    <p>Every vendor is vetted, every payment is secure. Your peace of mind is guaranteed.</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Quality Assured</h3>
+                    <p>We partner only with the best professionals in the industry. Excellence is our standard.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="team-section">
+            <div class="section-header">
+                <h2>Meet Our Amazing Team</h2>
+                <p>The passionate people behind your perfect event</p>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" alt="Sarah Johnson">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>Sarah Johnson</h3>
+                        <p>Founder & CEO</p>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400" alt="Emily Chen">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>Emily Chen</h3>
+                        <p>Event Director</p>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400" alt="Michael Perera">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>Michael Perera</h3>
+                        <p>Vendor Relations</p>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400" alt="Priya Sharma">
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>Priya Sharma</h3>
+                        <p>Customer Success</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonials Section -->
+        <div class="testimonials-section">
+            <h2>What Our Customers Say</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Eventora made our wedding planning so easy! The platform is intuitive, vendors are professional, and the support team was amazing. Highly recommended!"</p>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="Sarah & Michael">
+                        <div class="author-info">
+                            <h4>Sarah & Michael</h4>
+                            <p>Wedding, March 2026</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Booked our corporate annual gala through Eventora. Everything was perfect - from catering to decoration. Saved us so much time and stress!"</p>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="David Kumar">
+                        <div class="author-info">
+                            <h4>David Kumar</h4>
+                            <p>Corporate Event, Jan 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Ready to Plan Your Perfect Event?</h2>
+            <p>Join thousands of happy customers who've created unforgettable moments with Eventora</p>
+            <div class="cta-buttons">
+                <a href="register.html" class="btn btn-large">Get Started Free</a>
+                <a href="services.html" class="btn btn-outline btn-large">Browse Services</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="global-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo-foot">Eventora</div>
+                <p>Your all-in-one event e‑commerce platform.</p>
+                <div class="social-icons">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-linkedin"></i>
+                </div>
+            </div>
+            <div class="footer-col">
+                <p><strong>Explore</strong></p>
+                <p><a href="services.html">Services</a></p>
+                <p><a href="about.html">How it works</a></p>
+                <p><a href="privacy.html">Privacy Policy</a></p>
+            </div>
+            <div class="footer-col">
+                <p><strong>Support</strong></p>
+                <p><a href="contact.html">Contact</a></p>
+                <p>+94 77 123 4567</p>
+                <p>support@eventora.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Eventora · All rights reserved · Colombo, Sri Lanka</p>
+        </div>
+    </footer>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

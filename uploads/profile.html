@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Eventora | Professional Profile Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0f172a;
+            --primary-light: #1e293b;
+            --accent-gold: #fbbf24;
+            --accent-amber: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-gold: 0 0 20px rgba(251,191,36,0.3);
+            --border-radius: 24px;
+            --border-radius-sm: 14px;
+            --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --transition-smooth: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .global-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-bounce);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        .profile-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, rgba(255,255,255,0.97), rgba(255,255,255,0.99));
+            border-radius: var(--border-radius);
+            padding: 2rem 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .welcome-text h1 {
+            color: var(--primary-dark);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-gold);
+            box-shadow: var(--shadow-md);
+            background: #fef3c7;
+        }
+
+        .avatar-edit {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--accent-gold);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            color: var(--primary-dark);
+            border: 2px solid white;
+        }
+
+        .avatar-edit:hover {
+            transform: scale(1.1);
+            background: var(--accent-amber);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+
+        .profile-email {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent-amber);
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-top: 1.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: var(--border-radius-sm);
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition-bounce);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .menu-item i {
+            width: 26px;
+            color: var(--text-muted);
+        }
+
+        .menu-item:hover {
+            background: #f8fafc;
+            transform: translateX(6px);
+        }
+
+        .menu-item:hover i {
+            color: var(--accent-gold);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            color: var(--primary-dark);
+        }
+
+        .menu-item.active i {
+            color: var(--accent-amber);
+        }
+
+        .logout-btn {
+            margin-top: 1.5rem;
+            background: #fee2e2;
+            color: #dc2626 !important;
+        }
+
+        .logout-btn:hover {
+            background: #fecaca;
+        }
+
+        .panel {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .panel.active-panel {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-bounce);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: var(--accent-amber);
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            font-weight: 800;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title h2 {
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .section-title a {
+            color: var(--accent-gold);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .bookings-list, .info-card, .services-grid {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .booking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .booking-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.4rem;
+        }
+
+        .booking-status {
+            display: inline-block;
+            padding: 0.25rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .status-confirmed { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fed7aa; color: #9a3412; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+
+        .booking-price {
+            font-weight: 800;
+            color: var(--accent-amber);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-bounce);
+            cursor: pointer;
+            border: 1px solid var(--border-light);
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-image {
+            height: 170px;
+            overflow: hidden;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .service-card:hover .service-image img {
+            transform: scale(1.08);
+        }
+
+        .service-info {
+            padding: 1.2rem;
+        }
+
+        .service-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 0.4rem;
+        }
+
+        .service-price {
+            color: var(--accent-amber);
+            font-weight: 800;
+        }
+
+        .info-card {
+            padding: 2rem;
+        }
+
+        .info-row {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .info-label {
+            width: 140px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .info-value {
+            color: var(--text-muted);
+            flex: 1;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            color: var(--primary-dark);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            width: 90%;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            animation: slideInUp 0.3s ease;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            z-index: 2000;
+            border-left: 5px solid var(--accent-gold);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .global-footer {
+            background: var(--primary-dark);
+            margin-top: 3rem;
+            padding: 3rem 5% 1.5rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-foot {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .footer-col p, .footer-col a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-bottom: 0.6rem;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent-gold);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons i {
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+
+        .social-icons i:hover {
+            color: var(--accent-gold);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .profile-sidebar { position: static; }
+        }
+        @media (max-width: 768px) {
+            .profile-container { padding: 0 1rem; }
+            .booking-item { flex-direction: column; text-align: center; gap: 1rem; }
+            .info-row { flex-direction: column; }
+            .info-label { width: auto; }
+            .global-header { flex-direction: column; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .social-icons { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <div class="logo">Eventora</div>
+        <nav class="nav-links">
+            <a href="#"><i class="fas fa-home"></i> Home</a>
+            <a href="#"><i class="fas fa-calendar-alt"></i> Services</a>
+            <a href="#"><i class="fas fa-compass"></i> Discover</a>
+            <a href="#"><i class="fas fa-headset"></i> Support</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <div class="welcome-banner">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h1 id="welcomeName">Welcome back, <span id="userNameDisplay">Guest</span>!</h1>
+                        <p>Your event journey starts here — manage bookings, explore services, and track everything.</p>
+                    </div>
+                    <div class="role-badge"><i class="fas fa-crown"></i><span id="roleText">Premium Member</span></div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <aside class="profile-sidebar">
+                    <div class="avatar-container">
+                        <img src="https://ui-avatars.com/api/?background=fbbf24&color=0f172a&bold=true&size=130&name=U" alt="Avatar" class="profile-avatar" id="avatarImg">
+                        <div class="avatar-edit" onclick="openAvatarModal()"><i class="fas fa-camera"></i></div>
+                    </div>
+                    <h3 class="profile-name" id="sidebarName">User</h3>
+                    <p class="profile-email" id="sidebarEmail">user@eventora.com</p>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item"><div class="stat-number" id="bookingCount">0</div><div class="stat-label">Bookings</div></div>
+                        <div class="stat-item"><div class="stat-number" id="wishlistCount">0</div><div class="stat-label">Wishlist</div></div>
+                        <div class="stat-item"><div class="stat-number" id="reviewCount">12</div><div class="stat-label">Reviews</div></div>
+                    </div>
+                    
+                    <div class="sidebar-menu">
+                        <div class="menu-item active" data-panel="dashboard"><i class="fas fa-chart-line"></i> Dashboard</div>
+                        <div class="menu-item" data-panel="bookings"><i class="fas fa-ticket-alt"></i> My Bookings</div>
+                        <div class="menu-item" data-panel="services"><i class="fas fa-sparkles"></i> Browse Services</div>
+                        <div class="menu-item" data-panel="profile"><i class="fas fa-id-card"></i> Profile Settings</div>
+                        <div class="menu-item" data-panel="wishlist"><i class="fas fa-heart"></i> Wishlist</div>
+                        <div class="menu-item logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+                    </div>
+                </aside>
+
+                <div class="main-content">
+                    <div class="panel active-panel" id="dashboardPanel">
+                        <div class="dashboard-cards">
+                            <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-info"><h3 id="totalBookings">0</h3><p>Total Bookings</p></div></div>
+                            <div class="stat-card"><div class="stat-icon"><i class="fas fa-wallet"></i></div><div class="stat-info"><h3 id="totalSpent">Rs 0</h3><p>Total Spent</p></div></div>
+                            <div class="stat-card"><div class="stat-icon"><i class="fas fa-heart"></i></div><div class="stat-info"><h3 id="wishlistTotal">0</h3><p>Saved Items</p></div></div>
+                        </div>
+                        <div class="section-title"><h2>📋 Recent Activity</h2><a onclick="switchPanel('bookings')">View All →</a></div>
+                        <div id="recentBookings" class="bookings-list"></div>
+                    </div>
+
+                    <div class="panel" id="bookingsPanel">
+                        <div class="section-title"><h2>📅 All Bookings</h2></div>
+                        <div id="allBookings" class="bookings-list"></div>
+                    </div>
+
+                    <div class="panel" id="servicesPanel">
+                        <div class="section-title"><h2>✨ Handpicked for You</h2></div>
+                        <div class="services-grid" id="servicesGrid"></div>
+                    </div>
+
+                    <div class="panel" id="profilePanel">
+                        <div class="info-card">
+                            <h3 style="margin-bottom:1.5rem;"><i class="fas fa-user-circle"></i> Personal Information</h3>
+                            <div class="info-row"><div class="info-label">Full Name</div><div class="info-value" id="profileFullName">-</div></div>
+                            <div class="info-row"><div class="info-label">Email Address</div><div class="info-value" id="profileEmail">-</div></div>
+                            <div class="info-row"><div class="info-label">Member Since</div><div class="info-value" id="memberSince">-</div></div>
+                            <div class="info-row"><div class="info-label">Phone Number</div><div class="info-value" id="profilePhone">+94 77 123 4567</div></div>
+                            <div class="info-row"><div class="info-label">Location</div><div class="info-value" id="profileLocation">Colombo, Sri Lanka</div></div>
+                            <button class="edit-btn" onclick="openProfileModal()"><i class="fas fa-pen"></i> Edit Profile</button>
+                        </div>
+                    </div>
+
+                    <div class="panel" id="wishlistPanel">
+                        <div class="section-title"><h2>❤️ Saved Services</h2></div>
+                        <div id="wishlistItems" class="services-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Profile Edit Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-user-edit"></i> Edit Profile</h3>
+            <label>Full Name</label>
+            <input type="text" id="editName" placeholder="Full Name">
+            <label>Email</label>
+            <input type="email" id="editEmail" placeholder="Email">
+            <label>Phone Number</label>
+            <input type="tel" id="editPhone" placeholder="Phone Number">
+            <label>Location</label>
+            <input type="text" id="editLocation" placeholder="Location">
+            <div class="modal-buttons">
+                <button onclick="saveProfile()" style="background:var(--accent-gold); font-weight:bold;">Save Changes</button>
+                <button onclick="closeProfileModal()" style="background:#f1f5f9;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avatar Edit Modal -->
+    <div id="avatarModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-image"></i> Update Avatar</h3>
+            <label>Avatar URL (image link)</label>
+            <input type="text" id="avatarUrl" placeholder="https://example.com/avatar.jpg">
+            <p style="font-size:0.8rem; color:#64748b; margin-top:0.5rem;">Or enter name initials for auto-generated avatar</p>
+            <label>Name Initials</label>
+            <input type="text" id="avatarInitials" placeholder="e.g., OC" maxlength="2">
+            <div class="modal-buttons">
+                <button onclick="saveAvatar()" style="background:var(--accent-gold); font-weight:bold;">Update Avatar</button>
+                <button onclick="closeAvatarModal()" style="background:#f1f5f9;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="global-footer">
+        <div class="footer-grid">
+            <div class="footer-col"><div class="logo-foot">Eventora</div><p>Your premium event planning companion.</p><div class="social-icons"><i class="fab fa-facebook"></i><i class="fab fa-instagram"></i><i class="fab fa-linkedin"></i></div></div>
+            <div class="footer-col"><p><strong>Company</strong></p><p><a href="#">About Us</a></p><p><a href="#">Careers</a></p><p><a href="#">Press</a></p></div>
+            <div class="footer-col"><p><strong>Help</strong></p><p><a href="#">FAQs</a></p><p><a href="#">Privacy Policy</a></p><p><a href="#">Terms of Service</a></p></div>
+        </div>
+        <div class="footer-bottom"><p>© 2026 Eventora · All rights reserved · Elevating experiences worldwide</p></div>
+    </footer>
+
+    <script>
+        // User Data
+        let currentUser = {
+            name: "Olivia Chen",
+            email: "olivia.chen@eventora.com",
+            phone: "+94 77 123 4567",
+            location: "Colombo, Sri Lanka",
+            createdAt: "2025-01-15",
+            avatarInitial: "OC"
+        };
+
+        let userBookings = [
+            { id: 'b1', serviceName: 'Royal Wedding Package', date: '2026-09-20', guests: 180, price: 185000, status: 'confirmed' },
+            { id: 'b2', serviceName: 'Gourmet Catering', date: '2026-09-21', guests: 150, price: 95000, status: 'completed' }
+        ];
+
+        let userWishlist = ['wedding', 'photography'];
+
+        const servicesData = [
+            { id: 'wedding', name: 'Royal Wedding Package', price: 185000, rating: 4.9, image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400' },
+            { id: 'birthday', name: 'Luxury Birthday Bash', price: 89000, rating: 4.8, image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400' },
+            { id: 'photography', name: 'Professional Photography', price: 55000, rating: 4.9, image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400' },
+            { id: 'catering', name: 'Gourmet Catering', price: 95000, rating: 4.8, image: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=400' }
+        ];
+
+        function showToast(msg, isErr = false) {
+            let t = document.querySelector('.toast');
+            if(t) t.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.background = isErr ? '#b91c1c' : '#1e293b';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2800);
+        }
+
+        function updateAvatarImage() {
+            const avatarImg = document.getElementById('avatarImg');
+            if(currentUser.avatarUrl) {
+                avatarImg.src = currentUser.avatarUrl;
+            } else {
+                avatarImg.src = `https://ui-avatars.com/api/?background=fbbf24&color=0f172a&bold=true&size=130&name=${encodeURIComponent(currentUser.avatarInitial || currentUser.name.charAt(0))}`;
+            }
+        }
+
+        function updateUI() {
+            const displayName = currentUser.name;
+            const initial = displayName.charAt(0);
+            document.getElementById('welcomeName').innerHTML = `Welcome back, <span style="color:#f59e0b;">${escapeHtml(displayName)}</span>!`;
+            document.getElementById('userNameDisplay').innerText = displayName;
+            document.getElementById('sidebarName').innerText = displayName;
+            document.getElementById('sidebarEmail').innerText = currentUser.email;
+            document.getElementById('profileFullName').innerText = displayName;
+            document.getElementById('profileEmail').innerText = currentUser.email;
+            document.getElementById('profilePhone').innerText = currentUser.phone;
+            document.getElementById('profileLocation').innerText = currentUser.location;
+            document.getElementById('memberSince').innerText = new Date(currentUser.createdAt).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+            document.getElementById('bookingCount').innerText = userBookings.length;
+            document.getElementById('totalBookings').innerText = userBookings.length;
+            document.getElementById('wishlistCount').innerText = userWishlist.length;
+            document.getElementById('wishlistTotal').innerText = userWishlist.length;
+            const spent = userBookings.reduce((s,b)=>s+(b.price||0),0);
+            document.getElementById('totalSpent').innerHTML = `Rs ${spent.toLocaleString()}`;
+            updateAvatarImage();
+            renderRecent();
+            renderAllBookings();
+            renderWishlist();
+            renderServices();
+        }
+
+        function renderRecent() {
+            const container = document.getElementById('recentBookings');
+            const recent = [...userBookings].slice(-2).reverse();
+            if(!recent.length) { container.innerHTML = `<div class="empty-state"><i class="fas fa-calendar-alt"></i><h3>No bookings yet</h3></div>`; return; }
+            container.innerHTML = recent.map(b => `<div class="booking-item"><div class="booking-info"><h4>${escapeHtml(b.serviceName)}</h4><p><i class="fas fa-calendar"></i> ${b.date}  <i class="fas fa-users"></i> ${b.guests} guests</p><span class="booking-status status-${b.status}">${b.status}</span></div><div class="booking-price">Rs ${b.price.toLocaleString()}</div></div>`).join('');
+        }
+
+        function renderAllBookings() {
+            const container = document.getElementById('allBookings');
+            if(!userBookings.length) { container.innerHTML = `<div class="empty-state"><i class="fas fa-ticket-alt"></i><h3>No Bookings</h3></div>`; return; }
+            container.innerHTML = userBookings.map(b => `<div class="booking-item"><div class="booking-info"><h4>${escapeHtml(b.serviceName)}</h4><p><i class="fas fa-calendar"></i> ${b.date}  <i class="fas fa-users"></i> ${b.guests} guests</p><span class="booking-status status-${b.status}">${b.status}</span></div><div class="booking-price">Rs ${b.price.toLocaleString()}</div><div class="booking-actions"><button class="edit-btn" style="padding:0.3rem 1rem; font-size:0.75rem;" onclick="cancelBooking('${b.id}')">Cancel</button></div></div>`).join('');
+        }
+
+        function renderWishlist() {
+            const container = document.getElementById('wishlistItems');
+            const items = servicesData.filter(s => userWishlist.includes(s.id));
+            if(!items.length) { container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-heart-broken"></i><h3>Wishlist empty</h3></div>`; return; }
+            container.innerHTML = items.map(s => `<div class="service-card" onclick="viewService('${s.id}')"><div class="service-image"><img src="${s.image}" alt="${s.name}"></div><div class="service-info"><h4>${escapeHtml(s.name)}</h4><div class="service-price">Rs ${s.price.toLocaleString()}</div><div class="service-rating"><i class="fas fa-star"></i> ${s.rating}</div></div></div>`).join('');
+        }
+
+        function renderServices() {
+            const container = document.getElementById('servicesGrid');
+            container.innerHTML = servicesData.map(s => `<div class="service-card" onclick="viewService('${s.id}')"><div class="service-image"><img src="${s.image}" alt="${s.name}"></div><div class="service-info"><h4>${escapeHtml(s.name)}</h4><div class="service-price">Rs ${s.price.toLocaleString()}</div><div class="service-rating"><i class="fas fa-star"></i> ${s.rating}</div></div></div>`).join('');
+        }
+
+        window.cancelBooking = (id) => {
+            if(confirm('Cancel this booking?')) {
+                userBookings = userBookings.filter(b => b.id !== id);
+                updateUI();
+                showToast('Booking cancelled');
+            }
+        };
+
+        window.viewService = (id) => showToast(`✨ Explore ${servicesData.find(s=>s.id===id)?.name} — ready for booking!`);
+
+        // Profile Modal Functions
+        function openProfileModal() {
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editEmail').value = currentUser.email;
+            document.getElementById('editPhone').value = currentUser.phone;
+            document.getElementById('editLocation').value = currentUser.location;
+            document.getElementById('profileModal').style.display = 'flex';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function saveProfile() {
+            const newName = document.getElementById('editName').value.trim();
+            const newEmail = document.getElementById('editEmail').value.trim();
+            const newPhone = document.getElementById('editPhone').value.trim();
+            const newLocation = document.getElementById('editLocation').value.trim();
+            
+            if(!newName || !newEmail) { showToast('Name and email required', true); return; }
+            
+            currentUser.name = newName;
+            currentUser.email = newEmail;
+            currentUser.phone = newPhone || currentUser.phone;
+            currentUser.location = newLocation || currentUser.location;
+            currentUser.avatarInitial = newName.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+            
+            updateUI();
+            closeProfileModal();
+            showToast('Profile updated successfully!');
+        }
+
+        // Avatar Modal Functions
+        function openAvatarModal() {
+            document.getElementById('avatarModal').style.display = 'flex';
+        }
+
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').style.display = 'none';
+        }
+
+        function saveAvatar() {
+            const url = document.getElementById('avatarUrl').value.trim();
+            const initials = document.getElementById('avatarInitials').value.trim().toUpperCase();
+            
+            if(url) {
+                currentUser.avatarUrl = url;
+                currentUser.avatarInitial = null;
+                showToast('Avatar updated!');
+            } else if(initials) {
+                currentUser.avatarInitial = initials;
+                delete currentUser.avatarUrl;
+                showToast('Initials avatar set');
+            } else {
+                currentUser.avatarInitial = currentUser.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+                delete currentUser.avatarUrl;
+                showToast('Reset to default avatar');
+            }
+            updateAvatarImage();
+            closeAvatarModal();
+        }
+
+        window.switchPanel = (panel) => {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active-panel'));
+            document.getElementById(`${panel}Panel`).classList.add('active-panel');
+            document.querySelectorAll('.menu-item').forEach(m => { m.classList.remove('active'); if(m.getAttribute('data-panel')===panel) m.classList.add('active'); });
+        };
+
+        window.logout = () => { showToast('See you soon! 👋'); setTimeout(()=> location.reload(), 800); };
+
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+
+        document.querySelectorAll('.menu-item[data-panel]').forEach(item => item.addEventListener('click',()=>switchPanel(item.getAttribute('data-panel'))));
+
+        updateUI();
+    </script>
+</body>
+</html>
