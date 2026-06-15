@@ -21,6 +21,27 @@ if (!$isAdmin) {
 
 require_once '../backend/config.php';
 
+// Handle AJAX booking status update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
+    header('Content-Type: application/json');
+    $bookingId = intval($_POST['booking_id'] ?? 0);
+    $newStatus = $_POST['status'] ?? '';
+    
+    $allowedStatuses = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'refunded'];
+    if ($bookingId > 0 && in_array($newStatus, $allowedStatuses)) {
+        try {
+            $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ?");
+            $stmt->execute([$newStatus, $bookingId]);
+            echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
+    }
+    exit;
+}
+
 try {
     $usersCount = $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
     $bookingsCount = $pdo->query('SELECT COUNT(*) FROM bookings')->fetchColumn();
@@ -658,6 +679,40 @@ try {
             font-weight: 700 !important;
             border-bottom: 2px solid rgba(212, 175, 55, 0.2) !important;
         }
+
+        /* Dashboard Action Buttons */
+        .action-btn-dashboard {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 4px;
+            color: var(--text-white);
+            transition: var(--transition);
+        }
+        .action-btn-dashboard:hover {
+            transform: translateY(-2px);
+        }
+        .approve-btn:hover {
+            background: rgba(0, 200, 83, 0.2);
+            border-color: var(--success);
+            color: var(--success);
+        }
+        .cancel-btn:hover {
+            background: rgba(255, 59, 48, 0.2);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .complete-btn:hover {
+            background: rgba(33, 150, 243, 0.2);
+            border-color: var(--info);
+            color: var(--info);
+        }
     </style>
 </head>
 <body>
@@ -891,6 +946,7 @@ try {
                                 <th>Event Date</th>
                                 <th>Revenue</th>
                                 <th>Status</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -905,6 +961,27 @@ try {
                                         <span class="badge" style="background: <?php echo $b['status'] === 'confirmed' ? 'rgba(0, 200, 83, 0.2)' : ($b['status'] === 'pending' ? 'rgba(255, 171, 0, 0.2)' : 'rgba(255, 59, 48, 0.2)'); ?>; color: <?php echo $b['status'] === 'confirmed' ? '#00c853' : ($b['status'] === 'pending' ? '#ffab00' : '#ff3b30'); ?>;">
                                             <?php echo ucfirst(htmlspecialchars($b['status'])); ?>
                                         </span>
+                                    </td>
+                                    <td>
+                                        <?php if ($b['status'] === 'pending'): ?>
+                                            <button class="action-btn-dashboard approve-btn" onclick="updateStatus(<?php echo $b['id']; ?>, 'confirmed')" title="Confirm Booking">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <button class="action-btn-dashboard cancel-btn" onclick="updateStatus(<?php echo $b['id']; ?>, 'cancelled')" title="Cancel Booking">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        <?php elseif ($b['status'] === 'confirmed'): ?>
+                                            <button class="action-btn-dashboard complete-btn" onclick="updateStatus(<?php echo $b['id']; ?>, 'completed')" title="Mark Completed">
+                                                <i class="fas fa-calendar-check"></i>
+                                            </button>
+                                            <button class="action-btn-dashboard cancel-btn" onclick="updateStatus(<?php echo $b['id']; ?>, 'cancelled')" title="Cancel Booking">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        <?php elseif ($b['status'] === 'completed'): ?>
+                                            <span style="color: var(--success); font-size: 0.8rem; font-weight: 600;"><i class="fas fa-check-double"></i> Done</span>
+                                        <?php else: ?>
+                                            <span style="color: var(--text-muted); font-size: 0.8rem;"><i class="fas fa-ban"></i> Cancelled</span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -951,6 +1028,31 @@ try {
             toast.style.zIndex = '9999';
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2500);
+        }
+
+        async function updateStatus(bookingId, newStatus) {
+            if (!confirm(`Are you sure you want to change this booking status to ${newStatus}?`)) return;
+            
+            const formData = new FormData();
+            formData.append('action', 'update_status');
+            formData.append('booking_id', bookingId);
+            formData.append('status', newStatus);
+            
+            try {
+                const response = await fetch('admin-dashboard.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showMessage(`✅ ${result.message}`);
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showMessage(`❌ ${result.message}`);
+                }
+            } catch (err) {
+                showMessage('❌ Connection error. Please try again.');
+            }
         }
 
         document.querySelector('.profile-btn')?.addEventListener('click', () => showMessage('✨ Welcome back, Admin!'));

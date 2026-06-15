@@ -15,6 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
+        if (($user['status'] ?? 'active') === 'banned') {
+            echo json_encode(['success' => false, 'message' => 'Your account has been banned. Please contact support.']);
+            exit;
+        }
         $role = $user['role'] ?? 'user';
         if (empty($role) && $user['email'] === 'admin@eventora.com') {
             $role = 'admin';

@@ -250,11 +250,11 @@ CREATE TABLE IF NOT EXISTS user_sessions (
 
 -- Insert Admin User
 INSERT INTO users (name, email, password, phone, role, email_verified, status) VALUES
-('Administrator', 'admin@eventora.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '+94 77 123 4567', 'admin', TRUE, 'active');
+('Administrator', 'admin@eventora.com', '$2y$10$g1o2y78m16WdXZZBI1sBnOpQuZwCfnK69RNNMAGLu0R/ZCJ/dR0ve', '+94 77 123 4567', 'admin', TRUE, 'active');
 
 -- Insert Demo User
 INSERT INTO users (name, email, password, phone, address, city, role, email_verified, status) VALUES
-('Demo User', 'user@eventora.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '+94 71 234 5678', '123 Main Street', 'Colombo', 'user', TRUE, 'active');
+('Demo User', 'user@eventora.com', '$2y$10$t64WHBv7U8hegVfHSjh31u4kTiqzuL0yDRwibNN4HGNGm5cVjJWhi', '+94 71 234 5678', '123 Main Street', 'Colombo', 'user', TRUE, 'active');
 
 -- Insert Sample Vendors
 INSERT INTO users (name, email, password, phone, role, email_verified, status) VALUES
