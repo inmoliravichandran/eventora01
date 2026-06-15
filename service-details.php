@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../backend/config.php';
+require_once 'backend/config.php';
 
 $serviceId = intval($_GET['id'] ?? 0);
 if ($serviceId <= 0) {
@@ -85,7 +85,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title><?php echo htmlspecialchars($service['name']); ?> | Eventora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         .main-content { max-width: 1400px; margin: 0 auto; padding: 2rem; }
         .breadcrumb { margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted); }
@@ -306,7 +306,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
     <!-- Footer Template -->
     <?php include 'footer.php'; ?>
 
-    <script src="../js/script.js"></script>
+    <script src="js/script.js"></script>
     <script>
         const serviceId = <?php echo $serviceId; ?>;
         const isLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
@@ -385,7 +385,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
             formData.append('special_requests', specialRequests);
 
             try {
-                const response = await fetch('../backend/add_to_cart.php', {
+                const response = await fetch('backend/add_to_cart.php', {
                     method: 'POST',
                     body: formData
                 });

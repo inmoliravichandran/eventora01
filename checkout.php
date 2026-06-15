@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../backend/config.php';
+require_once 'backend/config.php';
 
 // Protect page
 if (!isset($_SESSION['user_id'])) {
@@ -55,7 +55,7 @@ if (!$defaultEventDate) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Checkout | Eventora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         .checkout-container { display: grid; grid-template-columns: 2fr 1.2fr; gap: 2.5rem; margin-top: 2rem; }
@@ -333,7 +333,7 @@ if (!$defaultEventDate) {
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Booking...';
             
             try {
-                const response = await fetch('../backend/create_booking.php', {
+                const response = await fetch('backend/create_booking.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

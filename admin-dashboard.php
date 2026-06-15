@@ -19,7 +19,7 @@ if (!$isAdmin) {
     exit;
 }
 
-require_once '../backend/config.php';
+require_once 'backend/config.php';
 
 // Handle AJAX operations
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -964,7 +964,7 @@ try {
                     <i class="fas fa-home"></i>
                     <span>Front Page</span>
                 </a>
-                <a href="../backend/logout.php" class="nav-item" style="margin-top: 4rem; color: var(--danger);">
+                <a href="backend/logout.php" class="nav-item" style="margin-top: 4rem; color: var(--danger);">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Sign Out</span>
                 </a>

@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../backend/config.php';
+require_once 'backend/config.php';
 
 // Fetch filter parameters from GET request
 $category = $_GET['category'] ?? 'all';
@@ -85,7 +85,7 @@ function getServiceIcon($cat) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discover Services | Eventora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         /* Overrides to fix card layout and conflicts from global style.css */
         .services-grid {
@@ -637,7 +637,7 @@ function getServiceIcon($cat) {
     <!-- Footer Template -->
     <?php include 'footer.php'; ?>
 
-    <script src="../js/script.js"></script>
+    <script src="js/script.js"></script>
     <script>
         function applyFilters() {
             const activePill = document.querySelector('.category-pill.active');

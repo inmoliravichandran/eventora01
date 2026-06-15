@@ -163,8 +163,7 @@ async function handleRegister(event) {
 }
 
 function backendURL(path) {
-    const isInUploads = window.location.pathname.split('/').includes('uploads');
-    return isInUploads ? `../backend/${path}` : `backend/${path}`;
+    return `backend/${path}`;
 }
 
 // Handle Login

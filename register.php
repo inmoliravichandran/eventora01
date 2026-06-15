@@ -2,13 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// If user is already logged in, redirect to services or admin dashboard
+// If user is already logged in, redirect
 if (isset($_SESSION['user_id'])) {
-    if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-        header("Location: admin-dashboard.php");
-    } else {
-        header("Location: services.php");
-    }
+    header("Location: services.php");
     exit;
 }
 ?>
@@ -17,7 +13,7 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 Login | Eventora - Event Planning Platform</title>
+    <title>✨ Register | Eventora - Create Account</title>
     <style>
         *,
         *:after,
@@ -124,7 +120,7 @@ if (isset($_SESSION['user_id'])) {
             padding: 2rem;
         }
 
-        .login-card {
+        .register-card {
             background: rgba(18, 25, 33, 0.92);
             backdrop-filter: blur(12px);
             padding: 2.5rem 2rem;
@@ -138,7 +134,7 @@ if (isset($_SESSION['user_id'])) {
             box-shadow: 0 0 0px rgba(255, 255, 255, 0);
         }
 
-        .login-card.active {
+        .register-card.active {
             opacity: 1;
             transform: scale(1) translateY(0);
             pointer-events: all;
@@ -200,6 +196,30 @@ if (isset($_SESSION['user_id'])) {
             color: #5a6a7a;
         }
 
+        .password-strength {
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .strength-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .strength-fill {
+            width: 0%;
+            height: 100%;
+            transition: width 0.2s;
+        }
+        .strength-text {
+            color: #aaa;
+            font-size: 0.7rem;
+            min-width: 60px;
+        }
+
         .btn-submit {
             width: 100%;
             padding: 0.9rem;
@@ -253,24 +273,16 @@ if (isset($_SESSION['user_id'])) {
             background: rgba(255,215,0,0.25);
         }
 
-        .register-link {
+        .login-link {
             margin-top: 1.2rem;
             text-align: center;
             color: #888;
             font-size: 0.85rem;
         }
-        .register-link a {
+        .login-link a {
             color: var(--glow-color);
             text-decoration: none;
             font-weight: 600;
-        }
-
-        .role-badge {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            margin-left: 0.5rem;
         }
 
         .toast {
@@ -324,7 +336,7 @@ if (isset($_SESSION['user_id'])) {
 
         @media (max-width: 680px) {
             .container { gap: 4vmin; }
-            .login-card { min-width: 300px; padding: 1.8rem; }
+            .register-card { min-width: 300px; padding: 1.8rem; }
         }
     </style>
 </head>
@@ -391,33 +403,42 @@ if (isset($_SESSION['user_id'])) {
             <circle class="lamp__hit" cx="124" cy="347" r="66" fill="#C4C4C4" fill-opacity=".1" />
         </svg>
 
-        <div class="login-card" id="loginCard">
+        <div class="register-card" id="registerCard">
             <div class="header">
-                <h2>🔐 Welcome Back</h2>
-                <p>Sign in to continue your event journey</p>
+                <h2>✨ Create Account</h2>
+                <p>Join Eventora and start planning amazing events</p>
             </div>
 
-            <form id="loginForm">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>👤 Full Name</label>
+                    <input type="text" id="regName" placeholder="Alex Johnson" required>
+                </div>
                 <div class="form-group">
                     <label>📧 Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="hello@eventora.com" required autocomplete="email">
+                    <input type="email" id="regEmail" placeholder="hello@eventora.com" required>
                 </div>
                 <div class="form-group">
-                    <label>🔒 Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••" required autocomplete="current-password">
+                    <label>🔒 Password (min 6 characters)</label>
+                    <input type="password" id="regPassword" placeholder="Create a strong password" required>
+                    <div class="password-strength">
+                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                        <span class="strength-text" id="strengthText">Weak</span>
+                    </div>
                 </div>
-                <button type="submit" class="btn-submit">Sign In →</button>
+                <div class="form-group">
+                    <label>✓ Confirm Password</label>
+                    <input type="password" id="regConfirm" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="btn-submit">Create Account →</button>
                 <div class="form-footer">
-                    <a href="#" id="forgotLink">Forgot password?</a>
+                    By signing up, you agree to our <a href="#">Terms of Service</a>
                 </div>
-                <div class="demo-note" id="demoUserFill">
-                    🎭 Demo User: user@eventora.com / user123
+                <div class="demo-note" id="demoFill">
+                    🚀 Quick demo: Fill with random test account details
                 </div>
-                <div class="demo-note" id="demoAdminFill" style="background: rgba(168,85,247,0.15);">
-                    👑 Admin Login: admin@eventora.com / admin123
-                </div>
-                <div class="register-link">
-                    Don't have an account? <a href="register.php">Create one →</a>
+                <div class="login-link">
+                    Already have an account? <a href="login.php">Sign in →</a>
                 </div>
             </form>
         </div>
@@ -427,13 +448,13 @@ if (isset($_SESSION['user_id'])) {
     <script src="https://unpkg.com/gsap@3/dist/Draggable.min.js"></script>
     <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
     <script>
-        // Lamp Interaction
+        // Lamp Interaction (same as login)
         const { gsap, gsap: { registerPlugin, set, to, timeline }, MorphSVGPlugin, Draggable } = window;
         registerPlugin(MorphSVGPlugin);
         const AUDIO = { CLICK: new Audio("https://assets.codepen.io/605876/click.mp3") };
         const ON = document.querySelector("#on");
         const OFF = document.querySelector("#off");
-        const LOGIN_CARD = document.querySelector(".login-card");
+        const REGISTER_CARD = document.querySelector(".register-card");
         let startX, startY;
         const PROXY = document.createElement("div");
         const CORDS = gsap.utils.toArray(".cords path");
@@ -464,11 +485,11 @@ if (isset($_SESSION['user_id'])) {
                 if (STATE.ON) {
                     ON.setAttribute("checked", true);
                     OFF.removeAttribute("checked");
-                    LOGIN_CARD.classList.add("active");
+                    REGISTER_CARD.classList.add("active");
                 } else {
                     ON.removeAttribute("checked");
                     OFF.setAttribute("checked", true);
-                    LOGIN_CARD.classList.remove("active");
+                    REGISTER_CARD.classList.remove("active");
                 }
             },
             onComplete: () => {
@@ -503,46 +524,76 @@ if (isset($_SESSION['user_id'])) {
             setTimeout(() => div.remove(), 2800);
         }
 
-        // Login logic with real database backend (PHP session integration)
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        // Password strength
+        const pwdInput = document.getElementById('regPassword');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+        
+        function updateStrength() {
+            const val = pwdInput.value;
+            let score = 0;
+            if (val.length >= 6) score += 20;
+            if (val.length >= 10) score += 20;
+            if (/[a-z]/.test(val)) score += 15;
+            if (/[A-Z]/.test(val)) score += 15;
+            if (/[0-9]/.test(val)) score += 15;
+            if (/[^a-zA-Z0-9]/.test(val)) score += 15;
+            score = Math.min(100, score);
+            strengthFill.style.width = score + '%';
+            if (score < 30) { strengthFill.style.backgroundColor = '#ef4444'; strengthText.innerText = 'Weak'; }
+            else if (score < 60) { strengthFill.style.backgroundColor = '#f59e0b'; strengthText.innerText = 'Medium'; }
+            else { strengthFill.style.backgroundColor = '#10b981'; strengthText.innerText = 'Strong'; }
+        }
+        pwdInput.addEventListener('input', updateStrength);
+
+        // Confirm password validation
+        const confirmInput = document.getElementById('regConfirm');
+        confirmInput.addEventListener('input', function() {
+            const pwd = pwdInput.value;
+            if (this.value && this.value !== pwd) {
+                this.style.borderColor = '#ef4444';
+            } else {
+                this.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+
+        // Registration logic - connect to PHP backend database endpoint
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const pwd = pwdInput.value;
+            const confirm = confirmInput.value;
             
-            if (!email || !password) return showToast('Please fill all fields', true);
+            if (!name || !email || !pwd || !confirm) return showToast('Please fill all fields', true);
+            if (!email.includes('@')) return showToast('Valid email required', true);
+            if (pwd.length < 6) return showToast('Password must be at least 6 characters', true);
+            if (pwd !== confirm) return showToast('Passwords do not match', true);
             
             // Show loading state
             const btn = e.target.querySelector('.btn-submit');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
             btn.disabled = true;
 
             const formData = new FormData();
+            formData.append('name', name);
             formData.append('email', email);
-            formData.append('password', password);
+            formData.append('password', pwd);
+            formData.append('phone', ''); // optional
 
             try {
-                const response = await fetch('../backend/login.php', {
+                const response = await fetch('backend/register.php', {
                     method: 'POST',
                     body: formData
                 });
                 const result = await response.json();
 
                 if (result.success) {
-                    // Sync localStorage for legacy scripts
-                    localStorage.setItem('isAuthenticated', 'true');
-                    localStorage.setItem('currentUser', JSON.stringify(result.user));
-                    localStorage.setItem('userEmail', email);
-
-                    showToast(`✅ ${result.message}! Redirecting...`);
-
+                    showToast('✅ Account created successfully! Redirecting to login...');
                     setTimeout(() => {
-                        if (result.user && result.user.role === 'admin') {
-                            window.location.href = 'admin-dashboard.php';
-                        } else {
-                            window.location.href = 'services.php';
-                        }
-                    }, 1000);
+                        window.location.href = 'login.php';
+                    }, 1500);
                 } else {
                     showToast(`❌ ${result.message}`, true);
                 }
@@ -554,26 +605,15 @@ if (isset($_SESSION['user_id'])) {
             }
         });
 
-        // Forgot password demo
-        document.getElementById('forgotLink')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            if (email && email.includes('@')) showToast(`📧 Password reset link sent to ${email}`, false);
-            else showToast('Please enter your email address first', true);
-        });
-
-        // Demo User Fill
-        document.getElementById('demoUserFill')?.addEventListener('click', () => {
-            document.getElementById('loginEmail').value = 'user@eventora.com';
-            document.getElementById('loginPassword').value = 'user123';
-            showToast('🎭 Demo user credentials filled! Pull cord to toggle light and click Sign In.');
-        });
-
-        // Demo Admin Fill
-        document.getElementById('demoAdminFill')?.addEventListener('click', () => {
-            document.getElementById('loginEmail').value = 'admin@eventora.com';
-            document.getElementById('loginPassword').value = 'admin123';
-            showToast('👑 Admin credentials filled! Pull cord to toggle light and click Sign In.');
+        // Demo fill - creates a random regular user
+        document.getElementById('demoFill')?.addEventListener('click', () => {
+            const random = Math.floor(Math.random() * 10000);
+            document.getElementById('regName').value = `Tester${random}`;
+            document.getElementById('regEmail').value = `test${random}@eventora.com`;
+            pwdInput.value = 'TestPass123';
+            confirmInput.value = 'TestPass123';
+            updateStrength();
+            showToast('🎭 Demo data filled! Pull cord to toggle light and click Create Account.');
         });
     </script>
 </body>

@@ -34,12 +34,12 @@ The platform allows customers to browse, compare, book, and manage event service
 ### 🎨 Frontend
 
 * HTML5
-* CSS3
+* CSS3 (Glassmorphism design system)
 * JavaScript (Vanilla JS)
 
 ### ⚙️ Backend
 
-* PHP
+* PHP (with PDO)
 
 ### 🗄️ Database
 
@@ -55,275 +55,148 @@ The platform allows customers to browse, compare, book, and manage event service
 * Password Hashing
 * Session Management
 * Form Validation
-* SQL Injection Prevention
+* SQL Injection Prevention (PDO Prepared Statements)
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
-```bash
-Eventora/
+```
+eventora/
 │
-├── frontend/
-│   ├── index.html
-│   ├── about.html
-│   ├── services.html
-│   ├── login.html
-│   ├── register.html
-│   ├── contact.html
-│   └── assets/
-│       ├── css/
-│       ├── js/
-│       └── images/
+├── backend/                    ← API endpoints & database logic
+│   ├── config.php              ← DB connection settings
+│   ├── install_db.php          ← Run this once to create the database
+│   ├── event.sql               ← Database schema
+│   ├── login.php               ← Login API endpoint
+│   ├── register.php            ← Registration API endpoint
+│   ├── logout.php              ← Logout handler
+│   ├── get_services.php        ← Fetch services API
+│   ├── add_to_cart.php         ← Cart management
+│   ├── get_cart.php            ← Cart fetch API
+│   ├── remove_from_cart.php    ← Cart remove API
+│   ├── update_cart_quantity.php← Cart update API
+│   ├── create_booking.php      ← Booking creation API
+│   ├── get_bookings.php        ← Fetch bookings API
+│   ├── admin_data.php          ← Admin stats API
+│   └── check_auth.php          ← Session auth check
 │
-├── backend/
-│   ├── config/
-│   │   └── database.php
-│   ├── controllers/
-│   ├── models/
-│   ├── views/
-│   ├── auth/
-│   ├── admin/
-│   └── api/
+├── css/
+│   └── style.css               ← Global styling (glassmorphism theme)
 │
-├── database/
-│   └── eventora_db.sql
+├── js/
+│   └── script.js               ← Frontend logic & API calls
 │
-└── README.md
+├── uploads/                    ← User/service uploaded media files
+│   └── .gitkeep
+│
+├── index.php                   ← Home page
+├── about.php                   ← How it works page
+├── services.php                ← Services listing page
+├── service-details.php         ← Individual service page
+├── cart.php                    ← Shopping cart page
+├── checkout.php                ← Checkout page
+├── login.php                   ← Login page
+├── register.php                ← Registration page
+├── profile.php                 ← User profile page
+├── admin-dashboard.php         ← Admin panel
+├── contact.php                 ← Contact page
+├── privacy.php                 ← Privacy policy page
+├── header.php                  ← Shared header component
+├── footer.php                  ← Shared footer component
+│
+├── README.md
+└── SETUP_GUIDE.md
 ```
 
 ---
 
-# ✨ Main Features
+## ✨ Main Features
 
-## 👤 User Features
+### 👤 User Features
 
-### 🏠 Home Page
+* **Home Page** — Featured services, category showcase, trust indicators
+* **Service Browsing** — Search, filter by category, compare packages
+* **User Registration & Login** — Secure auth with session management
+* **Shopping Cart** — Add, update, remove services
+* **Event Booking** — Book packages with date selection
+* **User Profile** — Manage account & view booking history
+* **Contact Us** — Submit inquiries
 
-* Featured event services
-* Popular packages
-* Promotional banners
+### 👨‍💼 Admin Features
 
-### 🔍 Service Browsing
-
-* Search services
-* Filter by category
-* Compare packages
-
-### 📝 User Registration
-
-* Create new account
-* Input validation
-* Secure password storage
-
-### 🔐 Login System
-
-* Secure authentication
-* Session management
-
-### 🛒 Shopping Cart
-
-* Add services to cart
-* Update quantity
-* Remove services
-
-### 📅 Event Booking
-
-* Book event packages
-* Select event dates
-* Booking confirmation
-
-### 📦 Order Tracking
-
-* View booking status
-* Track service progress
-
-### 👤 User Profile
-
-* Update personal information
-* Manage account settings
-* View booking history
-
-### 📞 Contact Us
-
-* Submit inquiries
-* Customer support requests
+* **Dashboard** — Statistics overview (users, bookings, services)
+* **Service Management** — Full CRUD (Add, Edit, Delete services)
+* **Booking Management** — View & update booking statuses
+* **User Management** — View registered users
 
 ---
 
-# 👨‍💼 Admin Features
+## 🗄️ Database Tables
 
-### 📊 Dashboard
-
-* System overview
-* Statistics and reports
-
-### 👥 User Management
-
-* View users
-* Edit user information
-* Manage accounts
-
-### 🎉 Service Management
-
-* Add services
-* Update services
-* Delete services
-
-### 📅 Booking Management
-
-* View bookings
-* Update booking status
-* Confirm reservations
-
-### 💰 Order Management
-
-* Track payments
-* View transactions
-
-### 📩 Contact Management
-
-* View customer inquiries
-* Respond to messages
+| Table | Key Fields |
+|-------|-----------|
+| `users` | user_id, full_name, email, password, role |
+| `services` | id, name, category, description, price, image_url, is_featured |
+| `bookings` | id, user_id, service_id, event_date, status |
+| `cart` | id, user_id, service_id, quantity |
 
 ---
 
-# 🗄️ Database Tables
+## 🚀 Installation Guide
 
-### 👤 Users
+### Step 1️⃣ — Install XAMPP
 
-* user_id
-* full_name
-* email
-* password
-* phone
-* role
+Download and install XAMPP from: https://www.apachefriends.org
 
-### 🎉 Services
+### Step 2️⃣ — Place Project
 
-* service_id
-* service_name
-* category
-* description
-* price
-* image
+Copy the project folder into:
 
-### 📅 Bookings
-
-* booking_id
-* user_id
-* service_id
-* booking_date
-* event_date
-* status
-
-### 🛒 Cart
-
-* cart_id
-* user_id
-* service_id
-* quantity
-
-### 💰 Orders
-
-* order_id
-* user_id
-* total_amount
-* payment_status
-* order_date
-
-### 📩 Contact Messages
-
-* message_id
-* name
-* email
-* subject
-* message
-
----
-
-# 🚀 Installation Guide
-
-## Step 1️⃣ Install XAMPP
-
-Download and install XAMPP:
-
-https://www.apachefriends.org
-
----
-
-## Step 2️⃣ Move Project Folder
-
-Copy the project folder to:
-
-```bash
-xampp/htdocs/Eventora
+```
+xampp/htdocs/eventora
 ```
 
----
-
-## Step 3️⃣ Start Services
+### Step 3️⃣ — Start Services
 
 Open XAMPP Control Panel and start:
+- ✅ **Apache**
+- ✅ **MySQL**
 
-✅ Apache
+### Step 4️⃣ — Create the Database
 
-✅ MySQL
+Navigate to:
 
----
-
-## Step 4️⃣ Create Database
-
-Open:
-
-```bash
-http://localhost/phpmyadmin
+```
+http://localhost/eventora/backend/install_db.php
 ```
 
-Create database:
+Wait for: `{"success":true,"message":"SQL imported successfully"}`
 
-```sql
-eventora_db
-```
-
-Import:
-
-```bash
-database/eventora_db.sql
-```
-
----
-
-## Step 5️⃣ Configure Database Connection
-
-Update:
-
-```php
-backend/config/database.php
-```
-
-```php
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "eventora_db";
-```
-
----
-
-## Step 6️⃣ Run Application
+### Step 5️⃣ — Run Application
 
 Open browser:
 
-```bash
-http://localhost/Eventora
+```
+http://localhost/eventora/
 ```
 
-🎉 Eventora is now ready to use!
+🎉 Eventora is ready to use!
 
 ---
 
-# 🌟 Future Enhancements
+## 🔑 Default Admin Credentials
+
+```
+Email:    admin@eventora.com
+Password: admin123
+```
+
+> You can create the admin account via: `http://localhost/eventora/backend/create_admin.php`
+
+---
+
+## 🌟 Future Enhancements
 
 💳 Online Payment Gateway
 
@@ -339,7 +212,7 @@ http://localhost/Eventora
 
 ---
 
-# 👩‍💻 Developed By
+## 👩‍💻 Developed By
 
 **R. Inmoly**
 
@@ -351,9 +224,8 @@ http://localhost/Eventora
 
 ---
 
-# 📜 License
+## 📜 License
 
 This project is developed for educational and academic purposes only.
 
 © 2026 Eventora. All Rights Reserved.
-  

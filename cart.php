@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once '../backend/config.php';
+require_once 'backend/config.php';
 
 // Protect page
 if (!isset($_SESSION['user_id'])) {
@@ -38,7 +38,7 @@ $total = $subtotal + $delivery + $serviceFee - $discount;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart | Eventora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         .cart-container { display: grid; grid-template-columns: 2fr 1fr; gap: 2.5rem; margin-top: 1.5rem; }
@@ -218,7 +218,7 @@ $total = $subtotal + $delivery + $serviceFee - $discount;
             formData.append('quantity', newQty);
 
             try {
-                const response = await fetch('../backend/update_cart_quantity.php', {
+                const response = await fetch('backend/update_cart_quantity.php', {
                     method: 'POST',
                     body: formData
                 });
@@ -239,7 +239,7 @@ $total = $subtotal + $delivery + $serviceFee - $discount;
             formData.append('service_id', serviceId);
 
             try {
-                const response = await fetch('../backend/remove_from_cart.php', {
+                const response = await fetch('backend/remove_from_cart.php', {
                     method: 'POST',
                     body: formData
                 });
