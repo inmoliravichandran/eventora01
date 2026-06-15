@@ -625,6 +625,39 @@ try {
             background: var(--gold-primary);
             border-radius: 10px;
         }
+
+        /* Dark Glassmorphism Overrides */
+        .sidebar, .stat-card, .card, .search-bar {
+            background: rgba(17, 17, 21, 0.7) !important;
+            backdrop-filter: blur(16px) saturate(120%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(120%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: var(--border-radius) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+        }
+
+        .stat-card:hover, .card:hover {
+            transform: translateY(-4px) !important;
+            border-color: rgba(212, 175, 55, 0.3) !important;
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.08) !important;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark)) !important;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(184, 134, 11, 0.05)) !important;
+            border-left: 3px solid var(--gold-primary) !important;
+        }
+
+        .events-table th {
+            color: var(--gold-primary) !important;
+            font-weight: 700 !important;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2) !important;
+        }
     </style>
 </head>
 <body>
