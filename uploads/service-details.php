@@ -95,48 +95,97 @@ $isLoggedIn = isset($_SESSION['user_id']);
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2.5rem;
-            background: white;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow-md);
             margin-bottom: 2.5rem;
         }
 
-        .gallery-section { background: #f1f5f9; padding: 1rem; }
-        .main-image { width: 100%; height: 380px; object-fit: cover; border-radius: var(--border-radius-sm); }
+        .gallery-section { 
+            background: rgba(15, 23, 42, 0.02); 
+            padding: 1.5rem; 
+            border-right: 1px solid var(--glass-border);
+        }
+        .main-image { width: 100%; height: 380px; object-fit: cover; border-radius: var(--border-radius-sm); box-shadow: var(--shadow-sm); }
         .thumbnail-grid { display: flex; gap: 0.8rem; margin-top: 1rem; flex-wrap: wrap; }
-        .thumbnail { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid transparent; }
-        .thumbnail.active { border-color: var(--accent-gold); }
+        .thumbnail { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; }
+        .thumbnail:hover { transform: scale(1.05); }
+        .thumbnail.active { border-color: var(--accent-gold); transform: scale(1.02); }
 
-        .info-section { padding: 1.8rem; }
-        .service-category { background: var(--accent-gold); padding: 0.2rem 1rem; border-radius: 30px; font-size: 0.8rem; font-weight: 600; display: inline-block; margin-bottom: 1rem; text-transform: uppercase; }
-        .service-title { font-size: 2rem; margin-bottom: 0.5rem; }
+        .info-section { padding: 2.5rem; }
+        .service-category { background: var(--gradient-gold); color: var(--primary-dark); padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.75rem; font-weight: 700; display: inline-block; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .service-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
         .rating-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .stars { color: var(--accent-gold); letter-spacing: 2px; }
-        .price-tag { font-size: 1.8rem; font-weight: 700; color: var(--accent-amber); margin: 1rem 0; }
+        .price-tag { font-size: 2rem; font-weight: 800; color: var(--primary-dark); margin: 1rem 0; }
         .feature-list { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.5rem; }
-        .feature-item { background: #f1f5f9; padding: 0.4rem 1rem; border-radius: 30px; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+        .feature-item { background: rgba(15, 23, 42, 0.03); border: 1px solid rgba(15, 23, 42, 0.04); padding: 0.5rem 1.2rem; border-radius: 30px; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 500; }
 
-        .package-options { margin: 1rem 0; padding: 1rem; background: #f8fafc; border-radius: var(--border-radius-sm); }
-        .package-select { width: 100%; padding: 0.6rem; border-radius: 30px; border: 1px solid var(--border-light); margin-top: 0.5rem; }
+        .package-options { 
+            margin: 1.5rem 0; 
+            padding: 1.5rem; 
+            background: rgba(15, 23, 42, 0.03); 
+            border-radius: var(--border-radius-sm); 
+            border: 1px solid rgba(15, 23, 42, 0.04);
+        }
+        
+        .package-options select, 
+        .package-options input[type="date"], 
+        .package-options input[type="number"] {
+            width: 100% !important;
+            padding: 0.75rem 1.2rem !important;
+            border-radius: 30px !important;
+            border: 1px solid rgba(226, 232, 240, 0.8) !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            outline: none !important;
+            transition: all 0.3s !important;
+            font-family: inherit !important;
+            margin-top: 0.5rem !important;
+            color: var(--primary-dark) !important;
+        }
 
-        .action-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
-        .btn-primary, .btn-cart { background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber)); color: var(--primary-dark); border: none; padding: 0.8rem 1.8rem; border-radius: 40px; font-weight: 700; cursor: pointer; transition: var(--transition-bounce); display: inline-flex; align-items: center; gap: 0.5rem; }
-        .btn-outline { background: white; border: 2px solid var(--border-light); padding: 0.8rem 1.8rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
-        .btn-outline:hover { border-color: var(--accent-gold); transform: translateY(-2px); }
+        .package-options select:focus, 
+        .package-options input[type="date"]:focus, 
+        .package-options input[type="number"]:focus {
+            border-color: var(--accent-gold) !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15) !important;
+            background: white !important;
+        }
 
-        .detail-tabs { background: white; border-radius: var(--border-radius); padding: 1.5rem; margin-top: 2rem; box-shadow: var(--shadow-md); }
-        .review-item { border-bottom: 1px solid var(--border-light); padding: 1rem 0; }
+        .action-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .btn-primary, .btn-cart { background: var(--gradient-gold); color: var(--primary-dark); border: none; padding: 0.85rem 2.2rem; border-radius: 40px; font-weight: 700; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); }
+        .btn-primary:hover, .btn-cart:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35); }
+        
+        .btn-outline { background: white; border: 1px solid var(--border-light); padding: 0.85rem 2.2rem; border-radius: 40px; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .btn-outline:hover { border-color: var(--accent-gold); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+
+        .detail-tabs { 
+            background: var(--glass-bg); 
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius); 
+            padding: 2.5rem; 
+            margin-top: 2rem; 
+            box-shadow: var(--shadow-md); 
+        }
+        .detail-tabs h3 { font-size: 1.5rem; font-weight: 800; border-bottom: 2px solid var(--border-light); padding-bottom: 0.8rem; }
+        .review-item { border-bottom: 1px solid var(--border-light); padding: 1.2rem 0; }
         .review-item:last-child { border-bottom: none; }
-        .review-user { font-weight: 600; margin-bottom: 0.3rem; }
-        .review-comment { color: var(--text-dark); font-size: 0.95rem; margin-bottom: 0.3rem; }
+        .review-user { font-weight: 700; margin-bottom: 0.4rem; font-size: 1.05rem; }
+        .review-comment { color: var(--text-dark); font-size: 0.95rem; margin-bottom: 0.4rem; line-height: 1.6; }
         .review-date { color: var(--text-muted); font-size: 0.8rem; }
 
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 0.75rem 1.5rem; border-radius: 40px; z-index: 2000; border-left: 4px solid var(--accent-gold); box-shadow: var(--shadow-lg); }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary-dark); color: white; padding: 0.85rem 2rem; border-radius: 40px; z-index: 2000; border-left: 4px solid var(--accent-gold); box-shadow: var(--shadow-lg); font-weight: 600; }
 
         @media (max-width: 900px) {
             .detail-grid { grid-template-columns: 1fr; }
-            .info-section { padding: 1.5rem; }
+            .gallery-section { border-right: none; border-bottom: 1px solid var(--glass-border); }
+            .info-section { padding: 1.8rem; }
         }
     </style>
 </head>

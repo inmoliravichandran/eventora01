@@ -59,38 +59,76 @@ if (!$defaultEventDate) {
     <style>
         .main-content { max-width: 1200px; margin: 0 auto; padding: 2rem; }
         .checkout-container { display: grid; grid-template-columns: 2fr 1.2fr; gap: 2.5rem; margin-top: 2rem; }
-        .checkout-section { background: white; border-radius: var(--border-radius); padding: 1.8rem; box-shadow: var(--shadow-md); margin-bottom: 2rem; border: 1px solid var(--border-light); }
+        
+        .checkout-section { 
+            background: var(--glass-bg) !important; 
+            backdrop-filter: var(--backdrop-blur) !important;
+            -webkit-backdrop-filter: var(--backdrop-blur) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: var(--border-radius) !important; 
+            padding: 2.2rem; 
+            box-shadow: var(--shadow-md) !important; 
+            margin-bottom: 2rem; 
+        }
+        
         .section-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; }
-        .section-number { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-gold); color: var(--primary-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; }
-        .section-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-dark); margin: 0; }
+        .section-number { width: 30px; height: 30px; border-radius: 50%; background: var(--gradient-gold); color: var(--primary-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; }
+        .section-title { font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); margin: 0; letter-spacing: -0.01em; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
         .input-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
-        .input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-dark); }
-        .input-group input, .input-group select, .input-group textarea { padding: 0.75rem 1rem; border-radius: 30px; border: 1px solid var(--border-light); font-size: 0.9rem; outline: none; font-family: inherit; }
-        .input-group input:focus { border-color: var(--accent-gold); }
+        .input-group label { font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); }
+        
+        .input-group input, .input-group select, .input-group textarea { 
+            padding: 0.85rem 1.3rem !important; 
+            border-radius: 30px !important; 
+            border: 1px solid rgba(226, 232, 240, 0.8) !important; 
+            background: rgba(255, 255, 255, 0.9) !important;
+            font-size: 0.9rem; 
+            outline: none !important; 
+            font-family: inherit; 
+            color: var(--primary-dark);
+            transition: all 0.3s;
+        }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { 
+            border-color: var(--accent-gold) !important; 
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15) !important;
+            background: white !important;
+        }
         
         /* Payment methods styling */
         .payment-methods { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
-        .payment-method { flex: 1; border: 2px solid var(--border-light); border-radius: var(--border-radius-sm); padding: 1rem; text-align: center; cursor: pointer; transition: all 0.3s; }
-        .payment-method.selected { border-color: var(--accent-gold); background: #fefbeb; }
+        .payment-method { flex: 1; border: 1px solid rgba(226, 232, 240, 0.8); border-radius: var(--border-radius-sm); padding: 1.2rem 1rem; text-align: center; cursor: pointer; transition: all 0.3s; background: rgba(255, 255, 255, 0.4); }
+        .payment-method:hover { transform: translateY(-2px); border-color: var(--accent-gold); box-shadow: var(--shadow-sm); }
+        .payment-method.selected { border-color: var(--accent-gold); background: #fffbeb; box-shadow: var(--shadow-sm); font-weight: 700; }
         .payment-method i { font-size: 1.5rem; color: var(--accent-amber); margin-bottom: 0.5rem; display: block; }
         
         .order-review-item { display: flex; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; }
         .order-review-item:last-child { border-bottom: none; }
-        .order-review-item img { width: 60px; height: 60px; object-fit: cover; border-radius: var(--border-radius-sm); }
-        .order-review-details h4 { font-size: 0.95rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.2rem; }
-        .order-review-details p { font-size: 0.8rem; color: var(--text-muted); }
+        .order-review-item img { width: 60px; height: 60px; object-fit: cover; border-radius: var(--border-radius-sm); box-shadow: var(--shadow-sm); }
+        .order-review-details h4 { font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 0.2rem; }
+        .order-review-details p { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
         .order-review-price { font-weight: 700; color: var(--accent-amber); font-size: 0.95rem; margin-left: auto; }
 
         .price-breakdown { display: flex; flex-direction: column; gap: 0.8rem; margin: 1.5rem 0; border-top: 1px solid var(--border-light); padding-top: 1.5rem; }
-        .price-row { display: flex; justify-content: space-between; font-size: 0.9rem; }
-        .price-row.discount { color: #10b981; font-weight: 600; }
-        .price-row.total { border-top: 2px solid var(--border-light); padding-top: 1rem; font-size: 1.25rem; font-weight: 700; color: var(--primary-dark); }
+        .price-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 500; }
+        .price-row.discount { color: #10b981; font-weight: 700; }
+        .price-row.total { border-top: 2px solid var(--border-light); padding-top: 1rem; font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); }
         
-        .place-order-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber)); border: none; border-radius: 40px; color: var(--primary-dark); font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: var(--transition-bounce); margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .place-order-btn:hover { transform: scale(1.02); filter: brightness(1.05); }
+        .place-order-btn { width: 100%; padding: 1rem; background: var(--gradient-gold); border: none; border-radius: 40px; color: var(--primary-dark); font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s; margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); }
+        .place-order-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4); }
 
-        .success-animation { text-align: center; padding: 2rem; }
+        .success-card-panel {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem !important;
+            background: var(--glass-bg) !important;
+            backdrop-filter: var(--backdrop-blur) !important;
+            -webkit-backdrop-filter: var(--backdrop-blur) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: var(--border-radius) !important;
+            box-shadow: var(--shadow-lg) !important;
+        }
+
         .success-animation i { font-size: 5rem; color: #10b981; animation: scaleUp 0.5s ease-out; }
     </style>
 </head>
@@ -311,7 +349,7 @@ if (!$defaultEventDate) {
                     
                     const checkoutContainer = document.querySelector('.checkout-container');
                     checkoutContainer.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align: center; padding: 4rem; background: white; border-radius: var(--border-radius); box-shadow: var(--shadow-md);">
+                        <div class="success-card-panel">
                             <div class="success-animation">
                                 <i class="fas fa-check-circle" style="font-size: 5rem; color: #10b981;"></i>
                                 <h2 style="margin-bottom: 1rem; margin-top: 1.5rem; font-size: 2.2rem; color: var(--primary-dark);">Booking Confirmed!</h2>

@@ -100,17 +100,19 @@ try {
         }
 
         .trust-banner {
-            background: linear-gradient(135deg, #fef3c7, #fed7aa);
-            padding: 1rem;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: var(--backdrop-blur);
+            -webkit-backdrop-filter: var(--backdrop-blur);
+            padding: 1.2rem;
             border-radius: 60px;
             margin: 2rem 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 2rem;
+            gap: 2.5rem;
             flex-wrap: wrap;
-            animation: slideInUp 1s ease-out;
-            border: 1px solid rgba(251,191,36,0.3);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-sm);
         }
 
         .trust-item {
@@ -118,13 +120,41 @@ try {
             align-items: center;
             gap: 0.5rem;
             color: var(--primary-dark);
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.92rem;
         }
 
         .trust-item i {
             color: var(--accent-amber);
             font-size: 1.2rem;
-            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .cta-banner {
+            background: var(--gradient-gold) !important;
+            padding: 4.5rem 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin: 4rem 0;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .cta-banner h2 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+            letter-spacing: -0.03em;
+        }
+
+        .cta-banner p {
+            font-size: 1.2rem;
+            color: rgba(15, 23, 42, 0.8);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .category-showcase {
@@ -344,14 +374,17 @@ try {
         }
 
         .newsletter-section {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
-            padding: 4rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 4.5rem 2rem;
             border-radius: var(--border-radius);
             margin: 4rem 0;
             color: white;
             text-align: center;
             position: relative;
             overflow: hidden;
+            box-shadow: var(--shadow-lg);
         }
 
         .newsletter-section::before {
@@ -361,7 +394,7 @@ try {
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%);
             animation: rotate 30s linear infinite;
             font-size: 10rem;
             opacity: 0.1;
@@ -373,9 +406,11 @@ try {
         .newsletter-section h2 {
             color: white;
             font-size: 2.5rem;
+            font-weight: 800;
             margin-bottom: 1rem;
             position: relative;
             z-index: 2;
+            letter-spacing: -0.02em;
         }
 
         .newsletter-section p {
@@ -392,30 +427,33 @@ try {
             margin: 0 auto;
             position: relative;
             z-index: 2;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-radius: 60px;
+            overflow: hidden;
         }
 
         .newsletter-form input {
             flex: 1;
-            padding: 1rem 1.5rem;
+            padding: 1rem 1.6rem;
             border: none;
-            border-radius: 60px 0 0 60px;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-dark);
+            outline: none;
         }
 
         .newsletter-form button {
-            padding: 1rem 2rem;
+            padding: 1rem 2.2rem;
             border: none;
-            border-radius: 0 60px 60px 0;
-            background: var(--accent-gold);
+            background: var(--gradient-gold);
             color: var(--primary-dark);
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: var(--transition-bounce);
+            transition: all 0.3s;
         }
 
         .newsletter-form button:hover {
-            background: white;
-            transform: scale(1.05);
+            filter: brightness(1.1);
         }
 
         .partner-section {
@@ -426,30 +464,31 @@ try {
         .partner-logos {
             display: flex;
             justify-content: center;
-            gap: 3rem;
+            gap: 2.5rem;
             flex-wrap: wrap;
             margin-top: 2rem;
         }
 
         .partner-logo {
-            width: 120px;
-            height: 80px;
-            background: white;
+            width: 130px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: var(--backdrop-blur);
             border-radius: var(--border-radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary-dark);
             box-shadow: var(--shadow-sm);
-            transition: var(--transition-bounce);
-            border: 1px solid var(--border-light);
+            transition: all 0.3s;
+            border: 1px solid var(--glass-border);
         }
 
         .partner-logo:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-md);
-            border-color: var(--accent-gold);
+            border-color: rgba(251, 191, 36, 0.4);
         }
 
         .why-choose-grid {
@@ -855,12 +894,12 @@ try {
         </div>
 
         <!-- CTA Banner -->
-        <section style="background: linear-gradient(135deg, #fef3c7, #fed7aa); padding: 4rem; border-radius: var(--border-radius); text-align: center; margin: 4rem 0;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary-dark);">Ready to Start Planning?</h2>
-            <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2rem;">Join thousands of happy customers who've created unforgettable events with Eventora</p>
-            <div style="display: flex; gap: 1rem; justify-content: center;">
+        <section class="cta-banner">
+            <h2>Ready to Start Planning?</h2>
+            <p>Join thousands of happy customers who've created unforgettable events with Eventora</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                 <a href="register.php" class="btn btn-large">Get Started Free</a>
-                <a href="contact.php" class="btn btn-outline btn-large">Contact Us</a>
+                <a href="contact.php" class="btn btn-outline btn-large" style="border-color: var(--primary-dark);">Contact Us</a>
             </div>
         </section>
     </main>
