@@ -772,7 +772,16 @@ try {
         }
 
         /* Dark Glassmorphism Overrides */
-        .sidebar, .stat-card, .card, .search-bar {
+        .sidebar {
+            background: rgba(12, 12, 18, 0.95) !important;
+            backdrop-filter: blur(20px) saturate(120%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 0 !important; /* Sidebar should have NO border radius */
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .stat-card, .card, .search-bar {
             background: rgba(17, 17, 21, 0.7) !important;
             backdrop-filter: blur(16px) saturate(120%) !important;
             -webkit-backdrop-filter: blur(16px) saturate(120%) !important;
@@ -802,6 +811,14 @@ try {
             color: var(--gold-primary) !important;
             font-weight: 700 !important;
             border-bottom: 2px solid rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .events-table tr:hover td {
+            background: rgba(212, 175, 55, 0.03) !important;
+        }
+
+        .events-table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         }
 
         /* Dashboard Action Buttons */
@@ -836,6 +853,81 @@ try {
             background: rgba(33, 150, 243, 0.2);
             border-color: var(--info);
             color: var(--info);
+        }
+
+        /* Button styling */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: var(--bg-dark) !important;
+            font-weight: 700;
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.35);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Dropdown styling */
+        .status-select-dropdown {
+            background: rgba(17, 17, 21, 0.8) !important;
+            color: var(--text-white) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 8px !important;
+            padding: 6px 12px !important;
+            outline: none !important;
+            cursor: pointer !important;
+            font-family: inherit !important;
+            font-size: 0.85rem !important;
+            transition: var(--transition) !important;
+        }
+        .status-select-dropdown:focus {
+            border-color: var(--gold-primary) !important;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2) !important;
+        }
+
+        /* Modal card overrides */
+        .modal-card input, .modal-card select, .modal-card textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 8px;
+            color: var(--text-white);
+            outline: none;
+            transition: var(--transition);
+        }
+        .modal-card input:focus, .modal-card select:focus, .modal-card textarea:focus {
+            border-color: var(--gold-primary) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15) !important;
+        }
+
+        @keyframes modalAppear {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -1385,7 +1477,7 @@ try {
             document.getElementById('serviceId').value = '';
             document.getElementById('modalAction').value = 'add_service';
             document.getElementById('modalTitle').innerHTML = '<i class="fas fa-gem"></i> Add New Service';
-            serviceModal.classList.add('active');
+            serviceModal.style.display = 'flex';
         }
         
         function openEditServiceModal(s) {
@@ -1402,11 +1494,11 @@ try {
             document.getElementById('serviceDesc').value = s.description || '';
             document.getElementById('serviceFeatured').checked = parseInt(s.is_featured) === 1;
             
-            serviceModal.classList.add('active');
+            serviceModal.style.display = 'flex';
         }
         
         function closeServiceModal() {
-            serviceModal.classList.remove('active');
+            serviceModal.style.display = 'none';
         }
         
         // Handle service form submit
