@@ -87,9 +87,34 @@ function getServiceIcon($cat) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        .service-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: var(--shadow-lg);
+        /* Overrides to fix card layout and conflicts from global style.css */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .services-grid .service-card {
+            width: 100% !important; /* Override forced 300px width from style.css */
+            padding: 0 !important;   /* Override legacy 2rem padding so the image fits flush */
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .services-grid .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+            border-color: rgba(251, 191, 36, 0.4);
         }
 
         .card-image {
@@ -102,11 +127,11 @@ function getServiceIcon($cat) {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        .service-card:hover .card-image img {
-            transform: scale(1.1);
+        .services-grid .service-card:hover .card-image img {
+            transform: scale(1.08);
         }
 
         .card-overlay {
@@ -115,7 +140,8 @@ function getServiceIcon($cat) {
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(251,191,36,0.8), rgba(245,158,11,0.8));
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -123,19 +149,23 @@ function getServiceIcon($cat) {
             transition: opacity 0.3s ease;
         }
 
-        .service-card:hover .card-overlay {
+        .services-grid .service-card:hover .card-overlay {
             opacity: 1;
         }
 
         .card-overlay span {
             color: white;
             font-weight: 600;
-            font-size: 1.1rem;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
+            font-size: 1rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            transform: translateY(15px);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        .service-card:hover .card-overlay span {
+        .services-grid .service-card:hover .card-overlay span {
             transform: translateY(0);
         }
 
@@ -143,178 +173,343 @@ function getServiceIcon($cat) {
             position: absolute;
             top: 15px;
             left: 15px;
-            background: var(--accent-gold);
+            background: var(--gradient-gold);
             color: var(--primary-dark);
-            padding: 0.4rem 1rem;
+            padding: 0.4rem 1.2rem;
             border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             z-index: 2;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .wishlist-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ef4444;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 2;
-            transition: var(--transition-bounce);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .wishlist-badge:hover {
-            transform: scale(1.2);
-            background: #ef4444;
-            color: white;
-        }
-
-        .wishlist-badge.active {
-            background: #ef4444;
-            color: white;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
         }
 
         .card-content {
-            padding: 1.5rem;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .service-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--accent-amber);
-            margin-bottom: 0.8rem;
-            transition: var(--transition-bounce);
-            display: inline-block;
+            margin-bottom: 1rem;
+            background: #fffbeb;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow-sm);
         }
 
-        .service-card:hover .service-icon {
-            transform: rotate(360deg) scale(1.2);
-            color: var(--accent-gold);
+        .services-grid .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(360deg);
+            color: white;
+            background: var(--gradient-gold);
         }
 
         .card-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
             color: var(--primary-dark);
+            line-height: 1.3;
         }
 
         .rating {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            margin-bottom: 0.8rem;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .stars {
             color: var(--accent-gold);
-            letter-spacing: 2px;
+            font-size: 1rem;
         }
 
         .rating span {
             color: var(--text-muted);
             font-size: 0.85rem;
+            font-weight: 500;
         }
 
         .description {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            font-size: 0.92rem;
+            margin-bottom: 1.5rem;
             line-height: 1.6;
-        }
-
-        .features-mini {
-            display: flex;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .feature-mini {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .feature-mini i {
-            color: var(--accent-gold);
+            flex-grow: 1;
         }
 
         .price-section {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px dashed var(--border-light);
+            margin-top: auto;
+            padding-top: 1.2rem;
+            border-top: 1px dashed var(--border-light);
         }
 
         .price {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--accent-amber);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            display: flex;
+            flex-direction: column;
         }
 
         .price small {
             font-size: 0.75rem;
-            font-weight: 400;
+            font-weight: 500;
             color: var(--text-muted);
+            margin-top: -2px;
         }
 
         .btn-card {
-            padding: 0.5rem 1.2rem;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            padding: 0.7rem 1.4rem;
+            background: var(--gradient-gold);
             color: var(--primary-dark);
-            border-radius: 30px;
+            border-radius: 40px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.85rem;
-            transition: var(--transition-bounce);
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
         }
 
         .btn-card:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(245, 158, 11, 0.4);
+            color: var(--primary-dark);
+        }
+
+        /* Hero Section Styling */
+        .services-hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
             color: white;
+            padding: 4.5rem 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .services-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .services-hero h1 {
+            color: white;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .services-hero p {
+            color: #cbd5e1;
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .floating-badge {
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--accent-gold);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Category Pills styling */
+        .category-pills {
+            display: flex;
+            gap: 0.8rem;
+            overflow-x: auto;
+            padding: 0.5rem 0.2rem 1.5rem 0.2rem;
+            margin-bottom: 2.5rem;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+        }
+
+        .category-pills::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+
+        .category-pill {
+            background: white;
+            border: 1px solid var(--border-light);
+            padding: 0.9rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+            font-weight: 600;
+            color: var(--text-muted);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .category-pill i {
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .category-pill:hover {
+            transform: translateY(-3px);
+            color: var(--primary-dark);
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: var(--shadow-md);
+        }
+
+        .category-pill.active {
+            background: var(--gradient-gold);
+            color: var(--primary-dark);
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);
+        }
+
+        .category-pill.active i {
+            color: var(--primary-dark);
+        }
+
+        /* Filter Bar styling */
+        .filter-bar {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1 1 200px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .filter-group label i {
+            color: var(--accent-amber);
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 0.7rem 1.2rem;
+            border: 1px solid var(--border-light);
+            border-radius: 30px;
+            background: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.2rem center;
+            background-size: 1rem;
+            padding-right: 2.8rem;
+        }
+
+        .filter-group select:focus, .filter-group select:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
         }
 
         .empty-state {
             text-align: center;
-            padding: 4rem;
+            padding: 5rem 2rem;
             background: white;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-md);
             grid-column: 1 / -1;
+            border: 1px solid var(--border-light);
         }
 
         .empty-state i {
-            font-size: 5rem;
+            font-size: 4rem;
             color: var(--accent-gold);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            background: #fffbeb;
+            width: 90px;
+            height: 90px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
         }
 
         .empty-state h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
         }
 
         .empty-state p {
             color: var(--text-muted);
-            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .services-hero {
+                padding: 3rem 1.5rem;
+            }
+            .filter-bar {
+                padding: 1.2rem 1.5rem;
+            }
         }
     </style>
 </head>
