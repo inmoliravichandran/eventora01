@@ -15,7 +15,7 @@ $host = '127.0.0.1';
 $dbname = 'eventora_db';
 $username = 'root';
 $password = '';
-$port = 3307; // IMPORTANT for your setup
+$port = 3306; // IMPORTANT for your setup
 
 try {
     // ✅ FIX: include port (this was your main issue)
@@ -39,7 +39,7 @@ try {
         $errorMsg = 'Database connection failed. Please ensure:<br>
         1. MySQL is running in XAMPP<br>
         2. Database "eventora_db" exists in phpMyAdmin<br>
-        3. MySQL port is 3307 (XAMPP setting)';
+        3. MySQL port is 3306 (XAMPP setting)';
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['ajax'])) {

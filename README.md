@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎉 Eventora - Event Arrangement E-Commerce Platform
 
 ## 📌 Project Overview
@@ -229,3 +230,6 @@ Password: admin123
 This project is developed for educational and academic purposes only.
 
 © 2026 Eventora. All Rights Reserved.
+=======
+# eventora01
+>>>>>>> dd668031582078446142c5018964c88c2c6d7d1a
